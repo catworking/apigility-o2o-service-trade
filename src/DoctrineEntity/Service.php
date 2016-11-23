@@ -1,5 +1,6 @@
 <?php
 /**
+ * 服务
  * Created by PhpStorm.
  * User: figo-007
  * Date: 2016/11/22
@@ -13,6 +14,10 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\JoinTable;
 
 /**
  * Class Service
@@ -21,11 +26,64 @@ use Doctrine\ORM\Mapping\JoinColumn;
  */
 class Service
 {
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
+     */
     protected $id;
+
+    /**
+     * 服务类型
+     *
+     * @Column(type="smallint", nullable=true)
+     */
     protected $type;
+
+    /**
+     * 服务的标题
+     *
+     * @Column(type="string", length=200, nullable=true)
+     */
     protected $title;
+
+    /**
+     * 服务的主题图片
+     *
+     * @Column(type="string", length=255, nullable=true)
+     */
     protected $image;
+
+    /**
+     * 服务的描述
+     *
+     * @Column(type="text", nullable=true)
+     */
     protected $description;
-    protected $organization_id;
-    protected $individual_id;
+
+    /**
+     * 服务所属机构
+     *
+     * @ManyToOne(targetEntity="Organization")
+     * @JoinColumn(name="organization_id", referencedColumnName="id")
+     */
+    protected $organization;
+
+    /**
+     * 服务所属机构
+     *
+     * @ManyToOne(targetEntity="Individual")
+     * @JoinColumn(name="individual_id", referencedColumnName="id")
+     */
+    protected $individual;
+
+    /**
+     * 服务所属于的分类（可多选）
+     *
+     * @ManyToMany(targetEntity="ServiceCategory")
+     * @JoinTable(name="apigilityo2oservicetrade_services_belongs_service_categories",
+     *      joinColumns={@JoinColumn(name="service_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="service_category_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $categories;
 }

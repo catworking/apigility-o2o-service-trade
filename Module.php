@@ -2,12 +2,20 @@
 namespace ApigilityO2oServiceTrade;
 
 use ZF\Apigility\Provider\ApigilityProviderInterface;
+use Zend\Config\Config;
 
 class Module implements ApigilityProviderInterface
 {
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        $doctrine_config = new Config(include __DIR__ . '/config/doctrine.config.php');
+        //$service_config = new Config(include __DIR__ . '/config/service.config.php');
+
+        $module_config = new Config(include __DIR__ . '/config/module.config.php');
+        $module_config->merge($doctrine_config);
+        //$module_config->merge($service_config);
+
+        return $module_config;
     }
 
     public function getAutoloaderConfig()

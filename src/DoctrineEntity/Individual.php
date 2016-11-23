@@ -1,5 +1,7 @@
 <?php
 /**
+ * 提供服务的个体
+ *
  * Created by PhpStorm.
  * User: figo-007
  * Date: 2016/11/23
@@ -13,6 +15,10 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\JoinTable;
 
 /**
  * Class Individual
@@ -21,10 +27,43 @@ use Doctrine\ORM\Mapping\JoinColumn;
  */
 class Individual
 {
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
+     */
     protected $id;
-    protected $name;
-    protected $avatar;
+
+    /**
+     * 机构描述
+     *
+     * @Column(type="text", nullable=true)
+     */
     protected $description;
-    protected $organization_id;
-    protected $occupation_id;
+
+    /**
+     * 个体所属机构
+     *
+     * @ManyToOne(targetEntity="Organization")
+     * @JoinColumn(name="organization_id", referencedColumnName="id")
+     */
+    protected $organization;
+
+    /**
+     * 个体的职业
+     *
+     * @ManyToOne(targetEntity="Occupation")
+     * @JoinColumn(name="occupation_id", referencedColumnName="id")
+     */
+    protected $occupation;
+
+    /**
+     * 个体能提供的标准化服务
+     *
+     * @ManyToMany(targetEntity="Service")
+     * @JoinTable(name="apigilityo2oservicetrade_individuals_has_services",
+     *      joinColumns={@JoinColumn(name="individual_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="service_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $services;
 }

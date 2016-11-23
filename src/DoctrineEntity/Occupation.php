@@ -1,5 +1,6 @@
 <?php
 /**
+ * 职业表
  * Created by PhpStorm.
  * User: figo-007
  * Date: 2016/11/23
@@ -13,10 +14,9 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\GeneratedValue;
 
 /**
- * 职业表
- *
  * Class Occupation
  * @package ApigilityO2oServiceTrade\DoctrineEntity
  * @Entity @Table(name="apigilityo2oservicetrade_occupation")
