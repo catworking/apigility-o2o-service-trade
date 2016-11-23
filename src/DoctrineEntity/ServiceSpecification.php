@@ -48,7 +48,7 @@ class ServiceSpecification
     /**
      * 价格
      *
-     * @Column(type="float", precision=7, scale=2, nullable=true)
+     * @Column(type="decimal", precision=7, scale=2, nullable=true)
      */
     protected $price;
 
