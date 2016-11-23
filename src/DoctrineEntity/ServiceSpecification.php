@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: figo-007
- * Date: 2016/11/22
- * Time: 12:00
+ * Date: 2016/11/23
+ * Time: 15:45
  */
 namespace ApigilityO2oServiceTrade\DoctrineEntity;
 
@@ -15,17 +15,15 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
- * Class Service
+ * Class ServiceSpecification
  * @package ApigilityO2oServiceTrade\DoctrineEntity
- * @Entity @Table(name="apigilityo2oservicetrade_service")
+ * @Entity @Table(name="apigilityo2oservicetrade_service_specification")
  */
-class Service
+class Individual
 {
     protected $id;
-    protected $type;
-    protected $title;
-    protected $image;
+    protected $name;
     protected $description;
-    protected $organization_id;
-    protected $individual_id;
+    protected $price;
+    protected $service_id;
 }
