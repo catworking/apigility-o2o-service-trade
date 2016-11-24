@@ -26,6 +26,9 @@ use Doctrine\ORM\Mapping\JoinTable;
  */
 class Service
 {
+    const TYPE_STANDARD = 1;
+    const TYPE_NONSTANDARD = 2;
+
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -86,4 +89,37 @@ class Service
      *      )
      */
     protected $categories;
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId()
+    {
+        $this->id;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getType()
+    {
+        $this->type;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getTitle()
+    {
+        $this->title;
+    }
 }
