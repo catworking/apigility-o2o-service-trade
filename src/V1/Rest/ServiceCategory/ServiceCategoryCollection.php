@@ -1,10 +1,10 @@
 <?php
-namespace ApigilityO2oServiceTrade\V1\Rest\Service;
+namespace ApigilityO2oServiceTrade\V1\Rest\ServiceCategory;
 
 use Zend\Paginator\Paginator;
 use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
-class ServiceCollection extends Paginator
+class ServiceCategoryCollection extends Paginator
 {
     public function getCurrentItems()
     {
@@ -12,7 +12,7 @@ class ServiceCollection extends Paginator
         $collection = new ZendArrayObject();
 
         foreach ($set as $item) {
-            $collection->append(new ServiceEntity($item));
+            $collection->append(new ServiceCategoryEntity($item));
         }
         return $collection;
     }

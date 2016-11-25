@@ -50,6 +50,16 @@ class ServiceCategory
      */
     protected $parent;
 
+    /**
+     * @ManyToMany(targetEntity="Service", mappedBy="categories")
+     */
+    protected $services;
+
+    public function __construct() {
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->services = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
     public function setId($id)
     {
         $this->id = $id;

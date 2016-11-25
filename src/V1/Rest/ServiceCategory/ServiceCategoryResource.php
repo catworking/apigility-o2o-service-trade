@@ -1,11 +1,11 @@
 <?php
-namespace ApigilityO2oServiceTrade\V1\Rest\Service;
+namespace ApigilityO2oServiceTrade\V1\Rest\ServiceCategory;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use Zend\ServiceManager\ServiceManager;
 
-class ServiceResource extends AbstractResourceListener
+class ServiceCategoryResource extends AbstractResourceListener
 {
     protected $serviceService;
 
@@ -48,31 +48,30 @@ class ServiceResource extends AbstractResourceListener
     }
 
     /**
-     * 获取单个服务
+     * Fetch a resource
      *
      * @param  mixed $id
      * @return ApiProblem|mixed
      */
     public function fetch($id)
     {
-        try {
-            return new ServiceEntity($this->serviceService->getService($id));
-        } catch (\Exception $exception){
-            return new ApiProblem($exception->getCode(), $exception);
-        }
+        return new ApiProblem(405, 'The GET method has not been defined for individual resources');
     }
 
     /**
-     * 获取服务列表
+     * 获取服务分类列表
      *
      * @param  array $params
      * @return ApiProblem|mixed
      */
     public function fetchAll($params = [])
     {
+        $service_id = (int)$this->getEvent()->getRouteParam('service_id');
+
         try {
-            return new ServiceCollection($this->serviceService->getServices($params['type'], $params['service_category_id']));
-        } catch (\Exception $exception){
+            //$this->serviceService->test();
+            return new ServiceCategoryCollection($this->serviceService->getServiceCategorise($service_id));
+        } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception);
         }
     }

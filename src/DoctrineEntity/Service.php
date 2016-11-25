@@ -83,11 +83,8 @@ class Service
     /**
      * 服务所属于的分类（可多选）
      *
-     * @ManyToMany(targetEntity="ServiceCategory")
-     * @JoinTable(name="apigilityo2oservicetrade_services_belongs_service_categories",
-     *      joinColumns={@JoinColumn(name="service_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="service_category_id", referencedColumnName="id")}
-     *      )
+     * @ManyToMany(targetEntity="ServiceCategory", inversedBy="services")
+     * @JoinTable(name="apigilityo2oservicetrade_services_belongs_service_categories")
      */
     protected $categories;
 
@@ -104,7 +101,7 @@ class Service
 
     public function getId()
     {
-        $this->id;
+        return $this->id;
     }
 
     public function setType($type)
@@ -115,7 +112,7 @@ class Service
 
     public function getType()
     {
-        $this->type;
+        return $this->type;
     }
 
     public function setTitle($title)
@@ -126,7 +123,35 @@ class Service
 
     public function getTitle()
     {
-        $this->title;
+        return $this->title;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+        return $this;
     }
 
     public function getCategories()
