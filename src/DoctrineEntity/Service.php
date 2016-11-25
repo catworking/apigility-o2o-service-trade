@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class Service
@@ -90,6 +91,11 @@ class Service
      */
     protected $categories;
 
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -121,5 +127,10 @@ class Service
     public function getTitle()
     {
         $this->title;
+    }
+
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }
