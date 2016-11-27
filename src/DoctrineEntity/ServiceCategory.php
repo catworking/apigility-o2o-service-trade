@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class ServiceCategory
@@ -56,8 +57,8 @@ class ServiceCategory
     protected $services;
 
     public function __construct() {
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->services = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->children = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     public function setId($id)

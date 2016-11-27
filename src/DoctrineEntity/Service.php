@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -88,9 +89,17 @@ class Service
      */
     protected $categories;
 
+    /**
+     * 服务的规格
+     *
+     * @OneToMany(targetEntity="ServiceSpecification", mappedBy="service")
+     */
+    protected $specifications;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->specifications = new ArrayCollection();
     }
 
     public function setId($id)
@@ -157,5 +166,10 @@ class Service
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    public function getSpecifications()
+    {
+        return $this->specifications;
     }
 }
