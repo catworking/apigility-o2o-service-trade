@@ -5,6 +5,7 @@ return [
             \ApigilityO2oServiceTrade\V1\Rest\Service\ServiceResource::class => \ApigilityO2oServiceTrade\V1\Rest\Service\ServiceResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationResourceFactory::class,
         ],
     ],
     'router' => [
@@ -36,6 +37,15 @@ return [
                     ],
                 ],
             ],
+            'apigility-o2o-service-trade.rest.service-organization' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/service[/:service_id]/organization[/:service_organization_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -43,6 +53,7 @@ return [
             0 => 'apigility-o2o-service-trade.rest.service',
             1 => 'apigility-o2o-service-trade.rest.service-category',
             2 => 'apigility-o2o-service-trade.rest.service-specification',
+            3 => 'apigility-o2o-service-trade.rest.service-organization',
         ],
     ],
     'zf-rest' => [
@@ -107,12 +118,29 @@ return [
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationCollection::class,
             'service_name' => 'ServiceSpecification',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.service-organization',
+            'route_identifier_name' => 'service_organization_id',
+            'collection_name' => 'service_organization',
+            'entity_http_methods' => [],
+            'collection_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationCollection::class,
+            'service_name' => 'ServiceOrganization',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceCategory\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -130,6 +158,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -141,6 +174,10 @@ return [
                 1 => 'application/json',
             ],
             'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
@@ -182,6 +219,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'apigility-o2o-service-trade.rest.service-specification',
                 'route_identifier_name' => 'service_specification_id',
+                'is_collection' => true,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.service-organization',
+                'route_identifier_name' => 'service_organization_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.service-organization',
+                'route_identifier_name' => 'service_organization_id',
                 'is_collection' => true,
             ],
         ],

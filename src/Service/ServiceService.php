@@ -114,4 +114,25 @@ class ServiceService
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
         return new DoctrinePaginatorAdapter($doctrine_paginator);
     }
+
+    /**
+     * 获取非标准服务的提供机构
+     *
+     * @param null $service_id
+     * @return DoctrinePaginatorAdapter
+     */
+    public function getServiceOrganization($service_id = null)
+    {
+        $qb = new QueryBuilder($this->em);
+        $qb->select('o')->from('ApigilityO2oServiceTrade\DoctrineEntity\Organization', 'o');
+
+        if (!empty($service_id)) {
+            $qb->join('o.ownServices', 'os')
+                ->where('os.id = :service_id')
+                ->setParameter('service_id', $service_id);
+        }
+
+        $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
+        return new DoctrinePaginatorAdapter($doctrine_paginator);
+    }
 }

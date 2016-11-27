@@ -18,7 +18,9 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class Organization
@@ -72,4 +74,59 @@ class Organization
      *      )
      */
     protected $services;
+
+    /**
+     * @OneToMany(targetEntity="Service", mappedBy="organization")
+     */
+    protected $ownServices;
+
+    public function __construct()
+    {
+        $this->services = new ArrayCollection();
+        $this->ownServices = new ArrayCollection();
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
+    public function setImage($image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
 }

@@ -68,7 +68,7 @@ class Service
     /**
      * 服务所属机构
      *
-     * @ManyToOne(targetEntity="Organization")
+     * @ManyToOne(targetEntity="Organization", inversedBy="ownServices")
      * @JoinColumn(name="organization_id", referencedColumnName="id")
      */
     protected $organization;
@@ -155,6 +155,17 @@ class Service
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getOrganization()
+    {
+        return $this->organization;
     }
 
     public function setCategories($categories)
