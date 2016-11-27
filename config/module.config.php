@@ -4,6 +4,7 @@ return [
         'factories' => [
             \ApigilityO2oServiceTrade\V1\Rest\Service\ServiceResource::class => \ApigilityO2oServiceTrade\V1\Rest\Service\ServiceResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationResourceFactory::class,
         ],
     ],
     'router' => [
@@ -26,12 +27,22 @@ return [
                     ],
                 ],
             ],
+            'apigility-o2o-service-trade.rest.service-specification' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/service[/:service_id]/specification[/:service_specification_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
         'uri' => [
             0 => 'apigility-o2o-service-trade.rest.service',
             1 => 'apigility-o2o-service-trade.rest.service-category',
+            2 => 'apigility-o2o-service-trade.rest.service-specification',
         ],
     ],
     'zf-rest' => [
@@ -74,11 +85,34 @@ return [
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryCollection::class,
             'service_name' => 'serviceCategory',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.service-specification',
+            'route_identifier_name' => 'service_specification_id',
+            'collection_name' => 'service_specification',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationCollection::class,
+            'service_name' => 'ServiceSpecification',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceCategory\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -91,6 +125,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -98,6 +137,10 @@ return [
                 1 => 'application/json',
             ],
             'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceCategory\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
@@ -129,11 +172,26 @@ return [
                 'route_identifier_name' => 'service_category_id',
                 'is_collection' => true,
             ],
+            \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.service-specification',
+                'route_identifier_name' => 'service_specification_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.service-specification',
+                'route_identifier_name' => 'service_specification_id',
+                'is_collection' => true,
+            ],
         ],
     ],
     'zf-content-validation' => [
         'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
             'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Validator',
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => [
+            'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -180,6 +238,31 @@ return [
                 'description' => '服务的描述',
                 'field_type' => 'string',
                 'error_message' => '请输入服务的描述',
+            ],
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Validator' => [
+            0 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'id',
+                'field_type' => 'int',
+            ],
+            1 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'name',
+                'description' => '规格名',
+                'field_type' => 'string',
+            ],
+            2 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'price',
+                'description' => '价格',
+                'field_type' => 'float',
             ],
         ],
     ],

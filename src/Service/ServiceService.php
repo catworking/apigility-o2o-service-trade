@@ -25,8 +25,10 @@ class ServiceService
     }
 
     /**
+     * 获取一个服务对象
+     *
      * @param $service_id
-     * @return mixed
+     * @return \ApigilityO2oServiceTrade\DoctrineEntity\Service
      * @throws Exception\ServiceNotExistException
      */
     public function getService($service_id)
@@ -38,6 +40,8 @@ class ServiceService
     }
 
     /**
+     * 获取服务对象列表
+     *
      * @param null $type
      * @param null $service_category_id
      * @return DoctrinePaginatorAdapter
@@ -70,16 +74,39 @@ class ServiceService
     }
 
     /**
+     * 获取服务的分类
+     *
      * @param null $service_id
      * @return DoctrinePaginatorAdapter
      */
-    public function getServiceCategorise($service_id = null)
+    public function getServiceCategories($service_id = null)
     {
         $qb = new QueryBuilder($this->em);
         $qb->select('sc')->from('ApigilityO2oServiceTrade\DoctrineEntity\ServiceCategory', 'sc');
 
         if (!empty($service_id)) {
             $qb->innerJoin('sc.services', 's')
+                ->where('s.id = :service_id')
+                ->setParameter('service_id', $service_id);
+        }
+
+        $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
+        return new DoctrinePaginatorAdapter($doctrine_paginator);
+    }
+
+    /**
+     * 获取服务的规格
+     *
+     * @param null $service_id
+     * @return DoctrinePaginatorAdapter
+     */
+    public function getServiceSpecifications($service_id = null)
+    {
+        $qb = new QueryBuilder($this->em);
+        $qb->select('ss')->from('ApigilityO2oServiceTrade\DoctrineEntity\ServiceSpecification', 'ss');
+
+        if (!empty($service_id)) {
+            $qb->innerJoin('ss.service', 's')
                 ->where('s.id = :service_id')
                 ->setParameter('service_id', $service_id);
         }

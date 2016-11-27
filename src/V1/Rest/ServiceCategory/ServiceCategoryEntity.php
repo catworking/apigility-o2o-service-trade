@@ -2,6 +2,7 @@
 namespace ApigilityO2oServiceTrade\V1\Rest\ServiceCategory;
 
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
+use ApigilityO2oServiceTrade\DoctrineEntity\ServiceCategory;
 
 class ServiceCategoryEntity
 {
@@ -18,7 +19,7 @@ class ServiceCategoryEntity
      */
     protected $name;
 
-    public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\ServiceCategory $category)
+    public function __construct(ServiceCategory $category)
     {
         $hy = new ClassMethodsHydrator();
         $hy->hydrate($hy->extract($category), $this);

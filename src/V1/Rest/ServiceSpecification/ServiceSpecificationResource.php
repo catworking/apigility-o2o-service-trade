@@ -1,11 +1,11 @@
 <?php
-namespace ApigilityO2oServiceTrade\V1\Rest\ServiceCategory;
+namespace ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use Zend\ServiceManager\ServiceManager;
 
-class ServiceCategoryResource extends AbstractResourceListener
+class ServiceSpecificationResource extends AbstractResourceListener
 {
     protected $serviceService;
 
@@ -59,7 +59,7 @@ class ServiceCategoryResource extends AbstractResourceListener
     }
 
     /**
-     * 获取服务分类列表
+     * Fetch all or a subset of resources
      *
      * @param  array $params
      * @return ApiProblem|mixed
@@ -69,7 +69,7 @@ class ServiceCategoryResource extends AbstractResourceListener
         $service_id = (int)$this->getEvent()->getRouteParam('service_id');
 
         try {
-            return new ServiceCategoryCollection($this->serviceService->getServiceCategories($service_id));
+            return new ServiceSpecificationCollection($this->serviceService->getServiceSpecifications($service_id));
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception);
         }
