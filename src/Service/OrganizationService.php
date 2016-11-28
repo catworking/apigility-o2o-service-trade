@@ -50,8 +50,8 @@ class OrganizationService
         $qb->select('o')->from('ApigilityO2oServiceTrade\DoctrineEntity\Organization', 'o');
 
         if (isset($params->service_id)) {
-            $qb->innerJoin('o.services', 'os')
-                ->where('os.id = :service_id')
+            $qb->innerJoin('o.provideServices', 'ops')
+                ->where('ops.id = :service_id')
                 ->setParameter('service_id', $params->service_id);
 
         }

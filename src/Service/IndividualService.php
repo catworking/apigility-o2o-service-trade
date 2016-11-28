@@ -50,8 +50,8 @@ class IndividualService
         $qb->select('i')->from('ApigilityO2oServiceTrade\DoctrineEntity\Individual', 'i');
 
         if (isset($params->service_id)) {
-            $qb->innerJoin('i.services', 's')
-                ->where('s.id = :service_id')
+            $qb->innerJoin('i.provideServices', 'ips')
+                ->where('ips.id = :service_id')
                 ->setParameter('service_id', $params->service_id);
         }
 
