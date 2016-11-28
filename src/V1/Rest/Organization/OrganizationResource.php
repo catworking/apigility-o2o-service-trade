@@ -1,17 +1,17 @@
 <?php
-namespace ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization;
+namespace ApigilityO2oServiceTrade\V1\Rest\Organization;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use Zend\ServiceManager\ServiceManager;
 
-class ServiceOrganizationResource extends AbstractResourceListener
+class OrganizationResource extends AbstractResourceListener
 {
-    protected $serviceService;
+    protected $organizationService;
 
     public function __construct(ServiceManager $services)
     {
-        $this->serviceService = $services->get('ApigilityO2oServiceTrade\Service\ServiceService');
+        $this->organizationService = $services->get('ApigilityO2oServiceTrade\Service\OrganizationService');
     }
 
     /**
@@ -55,7 +55,11 @@ class ServiceOrganizationResource extends AbstractResourceListener
      */
     public function fetch($id)
     {
-        return new ApiProblem(405, 'The GET method has not been defined for individual resources');
+        try {
+            return new OrganizationEntity($this->organizationService->getOrganization($id));
+        } catch (\Exception $exception) {
+            return new ApiProblem($exception->getCode(), $exception->getMessage());
+        }
     }
 
     /**
@@ -66,12 +70,10 @@ class ServiceOrganizationResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
-        $service_id = (int)$this->getEvent()->getRouteParam('service_id');
-
         try {
-            return new ServiceOrganizationCollection($this->serviceService->getServiceOrganization($service_id));
+            return new OrganizationCollection($this->organizationService->getOrganizations($params));
         } catch (\Exception $exception) {
-            return new ApiProblem($exception->getCode(), $exception);
+            return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
     }
 

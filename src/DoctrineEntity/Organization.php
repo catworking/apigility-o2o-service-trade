@@ -59,7 +59,7 @@ class Organization
     /**
      * 机构类型
      *
-     * @ManyToOne(targetEntity="OrganizationType")
+     * @ManyToOne(targetEntity="OrganizationType", inversedBy="organizations")
      * @JoinColumn(name="organization_type_id", referencedColumnName="id")
      */
     protected $organizationType;
@@ -67,13 +67,10 @@ class Organization
     /**
      * 机构能提供的标准化服务
      *
-     * @ManyToMany(targetEntity="Service")
-     * @JoinTable(name="apigilityo2oservicetrade_organizations_has_services",
-     *      joinColumns={@JoinColumn(name="organization_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="service_id", referencedColumnName="id")}
-     *      )
+     * @ManyToMany(targetEntity="Service", inversedBy="providerOrganizations")
+     * @JoinTable(name="apigilityo2oservicetrade_organizations_has_services")
      */
-    protected $services;
+    protected $provideServices;
 
     /**
      * @OneToMany(targetEntity="Service", mappedBy="organization")
@@ -128,5 +125,28 @@ class Organization
     public function getImage()
     {
         return $this->image;
+    }
+
+    public function setOrganizationType($organization_type)
+    {
+        $this->organizationType = $organization_type;
+        return $this;
+    }
+
+    public function getOrganizationType()
+    {
+        return $this->organizationType;
+    }
+
+    public function addOwnServices(Service $service)
+    {
+        $this->ownServices[] = $service;
+        return $this;
+    }
+
+    public function addProvideService(Service $service)
+    {
+        $this->provideServices[] = $service;
+        return $this;
     }
 }

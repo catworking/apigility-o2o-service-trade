@@ -13,8 +13,10 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class Occupation
@@ -35,4 +37,38 @@ class Occupation
      * @Column(type="string", length=50, nullable=true)
      */
     protected $name;
+
+    /**
+     * 关联到此职业的个体
+     *
+     * @OneToMany(targetEntity="Individual", mappedBy="occupation")
+     */
+    protected $individuals;
+
+    public function __construct()
+    {
+        $this->individuals = new ArrayCollection();
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 }

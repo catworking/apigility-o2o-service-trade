@@ -71,7 +71,7 @@ class ServiceResource extends AbstractResourceListener
     public function fetchAll($params = [])
     {
         try {
-            return new ServiceCollection($this->serviceService->getServices($params['type'], $params['service_category_id']));
+            return new ServiceCollection($this->serviceService->getServices($params));
         } catch (\Exception $exception){
             return new ApiProblem($exception->getCode(), $exception);
         }

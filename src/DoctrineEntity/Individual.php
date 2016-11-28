@@ -19,6 +19,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class Individual
@@ -51,7 +53,7 @@ class Individual
     /**
      * 个体的职业
      *
-     * @ManyToOne(targetEntity="Occupation")
+     * @ManyToOne(targetEntity="Occupation", inversedBy="individuals")
      * @JoinColumn(name="occupation_id", referencedColumnName="id")
      */
     protected $occupation;
@@ -59,11 +61,75 @@ class Individual
     /**
      * 个体能提供的标准化服务
      *
-     * @ManyToMany(targetEntity="Service")
-     * @JoinTable(name="apigilityo2oservicetrade_individuals_has_services",
-     *      joinColumns={@JoinColumn(name="individual_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="service_id", referencedColumnName="id")}
-     *      )
+     * @ManyToMany(targetEntity="Service", inversedBy="providerIndividuals")
+     * @JoinTable(name="apigilityo2oservicetrade_individuals_has_services")
      */
-    protected $services;
+    protected $provideServices;
+
+    /**
+     * @OneToMany(targetEntity="Service", mappedBy="individual")
+     */
+    protected $ownServices;
+
+    public function __construct()
+    {
+        $this->services = new ArrayCollection();
+        $this->ownServices = new ArrayCollection();
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
+
+    public function setOccupation($occupation)
+    {
+        $this->occupation = $occupation;
+        return $this;
+    }
+
+    public function getOccupation()
+    {
+        return $this->occupation;
+    }
+
+    public function addOwnService(Service $service)
+    {
+        $this->ownServices[] = $service;
+        return $this;
+    }
+
+    public function addProvideService(Service $service)
+    {
+        $this->provideServices[] = $service;
+        return $this;
+    }
 }

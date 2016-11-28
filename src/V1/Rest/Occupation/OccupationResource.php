@@ -1,17 +1,17 @@
 <?php
-namespace ApigilityO2oServiceTrade\V1\Rest\ServiceCategory;
+namespace ApigilityO2oServiceTrade\V1\Rest\Occupation;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 use Zend\ServiceManager\ServiceManager;
 
-class ServiceCategoryResource extends AbstractResourceListener
+class OccupationResource extends AbstractResourceListener
 {
-    protected $serviceService;
+    protected $occupationService;
 
     public function __construct(ServiceManager $services)
     {
-        $this->serviceService = $services->get('ApigilityO2oServiceTrade\Service\ServiceService');
+        $this->occupationService = $services->get('ApigilityO2oServiceTrade\Service\OccupationService');
     }
 
     /**
@@ -55,11 +55,15 @@ class ServiceCategoryResource extends AbstractResourceListener
      */
     public function fetch($id)
     {
-        return new ApiProblem(405, 'The GET method has not been defined for individual resources');
+        try {
+            return new OccupationEntity($this->occupationService->getOccupation($id));
+        } catch (\Exception $exception) {
+            return new ApiProblem($exception->getCode(), $exception->getMessage());
+        }
     }
 
     /**
-     * 获取服务分类列表
+     * Fetch all or a subset of resources
      *
      * @param  array $params
      * @return ApiProblem|mixed
@@ -67,9 +71,9 @@ class ServiceCategoryResource extends AbstractResourceListener
     public function fetchAll($params = [])
     {
         try {
-            return new ServiceCategoryCollection($this->serviceService->getServiceCategories($params));
+            return new OccupationCollection($this->occupationService->getOccupations());
         } catch (\Exception $exception) {
-            return new ApiProblem($exception->getCode(), $exception);
+            return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
     }
 

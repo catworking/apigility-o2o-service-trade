@@ -46,27 +46,54 @@ class ServiceService
      * @param null $service_category_id
      * @return DoctrinePaginatorAdapter
      */
-    public function getServices($type = null, $service_category_id = null)
+    public function getServices($params)
     {
         $qb = new QueryBuilder($this->em);
         $qb->select('s')->from('ApigilityO2oServiceTrade\DoctrineEntity\Service', 's');
 
         $where = null;
-        if (!empty($type)) {
+        if (isset($params->type)) {
             $where = 's.type = :type';
         }
 
-        if (!empty($service_category_id)) {
+        if (isset($params->service_category_id)) {
             $qb->innerJoin('s.categories', 'sc');
-
             if (!empty($where)) $where .= ' AND ';
             $where .= 'sc.id = :service_category_id';
         }
 
+        if (isset($params->owner_organization_id)) {
+            $qb->innerJoin('s.organization', 'so');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'so.id = :owner_organization_id';
+        }
+
+        if (isset($params->provider_organization_id)) {
+            $qb->innerJoin('s.providerOrganizations', 'spo');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'spo.id = :provider_organization_id';
+        }
+
+        if (isset($params->owner_individual_id)) {
+            $qb->innerJoin('s.individual', 'si');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'si.id = :owner_individual_id';
+        }
+
+        if (isset($params->provider_individual_id)) {
+            $qb->innerJoin('s.providerIndividuals', 'spi');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'spi.id = :provider_individual_id';
+        }
+
         if (!empty($where)) {
             $qb->where($where);
-            if (!empty($type)) $qb->setParameter('type', $type);
-            if (!empty($service_category_id)) $qb->setParameter('service_category_id', $service_category_id);
+            if (isset($params->type)) $qb->setParameter('type', $params->type);
+            if (isset($params->service_category_id)) $qb->setParameter('service_category_id', $params->service_category_id);
+            if (isset($params->owner_organization_id)) $qb->setParameter('owner_organization_id', $params->owner_organization_id);
+            if (isset($params->provider_organization_id)) $qb->setParameter('provider_organization_id', $params->provider_organization_id);
+            if (isset($params->owner_individual_id)) $qb->setParameter('owner_individual_id', $params->owner_individual_id);
+            if (isset($params->provider_individual_id)) $qb->setParameter('provider_individual_id', $params->provider_individual_id);
         }
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
@@ -79,15 +106,15 @@ class ServiceService
      * @param null $service_id
      * @return DoctrinePaginatorAdapter
      */
-    public function getServiceCategories($service_id = null)
+    public function getServiceCategories($params)
     {
         $qb = new QueryBuilder($this->em);
         $qb->select('sc')->from('ApigilityO2oServiceTrade\DoctrineEntity\ServiceCategory', 'sc');
 
-        if (!empty($service_id)) {
-            $qb->innerJoin('sc.services', 's')
-                ->where('s.id = :service_id')
-                ->setParameter('service_id', $service_id);
+        if (isset($params->service_category_id)) {
+            $qb->innerJoin('sc.parent', 'p')
+                ->where('p.id = :service_category_id')
+                ->setParameter('service_category_id', $params->service_category_id);
         }
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
@@ -108,27 +135,6 @@ class ServiceService
         if (!empty($service_id)) {
             $qb->innerJoin('ss.service', 's')
                 ->where('s.id = :service_id')
-                ->setParameter('service_id', $service_id);
-        }
-
-        $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
-        return new DoctrinePaginatorAdapter($doctrine_paginator);
-    }
-
-    /**
-     * 获取非标准服务的提供机构
-     *
-     * @param null $service_id
-     * @return DoctrinePaginatorAdapter
-     */
-    public function getServiceOrganization($service_id = null)
-    {
-        $qb = new QueryBuilder($this->em);
-        $qb->select('o')->from('ApigilityO2oServiceTrade\DoctrineEntity\Organization', 'o');
-
-        if (!empty($service_id)) {
-            $qb->join('o.ownServices', 'os')
-                ->where('os.id = :service_id')
                 ->setParameter('service_id', $service_id);
         }
 

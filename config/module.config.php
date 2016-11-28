@@ -5,7 +5,10 @@ return [
             \ApigilityO2oServiceTrade\V1\Rest\Service\ServiceResource::class => \ApigilityO2oServiceTrade\V1\Rest\Service\ServiceResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationResourceFactory::class,
-            \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationResource::class => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationResource::class => \ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeResource::class => \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationResource::class => \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResource::class => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResourceFactory::class,
         ],
     ],
     'router' => [
@@ -22,7 +25,7 @@ return [
             'apigility-o2o-service-trade.rest.service-category' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/o2oservicetrade/service[/:service_id]/category[/:service_category_id]',
+                    'route' => '/o2oservicetrade/service-category[/:service_category_id]',
                     'defaults' => [
                         'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceCategory\\Controller',
                     ],
@@ -37,12 +40,39 @@ return [
                     ],
                 ],
             ],
-            'apigility-o2o-service-trade.rest.service-organization' => [
+            'apigility-o2o-service-trade.rest.occupation' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/o2oservicetrade/service[/:service_id]/organization[/:service_organization_id]',
+                    'route' => '/o2oservicetrade/occupation[/:occupation_id]',
                     'defaults' => [
-                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller',
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Occupation\\Controller',
+                    ],
+                ],
+            ],
+            'apigility-o2o-service-trade.rest.organization-type' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/organization-type[/:organization_type_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\OrganizationType\\Controller',
+                    ],
+                ],
+            ],
+            'apigility-o2o-service-trade.rest.organization' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/organization[/:organization_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Organization\\Controller',
+                    ],
+                ],
+            ],
+            'apigility-o2o-service-trade.rest.individual' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/individual[/:individual_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller',
                     ],
                 ],
             ],
@@ -53,7 +83,10 @@ return [
             0 => 'apigility-o2o-service-trade.rest.service',
             1 => 'apigility-o2o-service-trade.rest.service-category',
             2 => 'apigility-o2o-service-trade.rest.service-specification',
-            3 => 'apigility-o2o-service-trade.rest.service-organization',
+            4 => 'apigility-o2o-service-trade.rest.occupation',
+            5 => 'apigility-o2o-service-trade.rest.organization-type',
+            6 => 'apigility-o2o-service-trade.rest.organization',
+            7 => 'apigility-o2o-service-trade.rest.individual',
         ],
     ],
     'zf-rest' => [
@@ -71,6 +104,10 @@ return [
             'collection_query_whitelist' => [
                 0 => 'type',
                 1 => 'service_category_id',
+                2 => 'owner_organization_id',
+                3 => 'provider_organization_id',
+                4 => 'owner_individual_id',
+                5 => 'provider_individual_id',
             ],
             'page_size' => 25,
             'page_size_param' => null,
@@ -89,8 +126,10 @@ return [
             'collection_http_methods' => [
                 0 => 'GET',
             ],
-            'collection_query_whitelist' => [],
-            'page_size' => '5',
+            'collection_query_whitelist' => [
+                0 => 'service_category_id',
+            ],
+            'page_size' => '25',
             'page_size_param' => null,
             'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryEntity::class,
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryCollection::class,
@@ -118,21 +157,81 @@ return [
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationCollection::class,
             'service_name' => 'ServiceSpecification',
         ],
-        'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => [
-            'listener' => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationResource::class,
-            'route_name' => 'apigility-o2o-service-trade.rest.service-organization',
-            'route_identifier_name' => 'service_organization_id',
-            'collection_name' => 'service_organization',
-            'entity_http_methods' => [],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Occupation\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.occupation',
+            'route_identifier_name' => 'occupation_id',
+            'collection_name' => 'occupation',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
             'collection_http_methods' => [
                 0 => 'GET',
             ],
             'collection_query_whitelist' => [],
             'page_size' => 25,
             'page_size_param' => null,
-            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationEntity::class,
-            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationCollection::class,
-            'service_name' => 'ServiceOrganization',
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationCollection::class,
+            'service_name' => 'Occupation',
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\OrganizationType\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.organization-type',
+            'route_identifier_name' => 'organization_type_id',
+            'collection_name' => 'organization_type',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeCollection::class,
+            'service_name' => 'OrganizationType',
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Organization\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.organization',
+            'route_identifier_name' => 'organization_id',
+            'collection_name' => 'organization',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_query_whitelist' => [
+                0 => 'service_id',
+            ],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationCollection::class,
+            'service_name' => 'Organization',
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.individual',
+            'route_identifier_name' => 'individual_id',
+            'collection_name' => 'individual',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_query_whitelist' => [
+                0 => 'service_id',
+            ],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualCollection::class,
+            'service_name' => 'Individual',
         ],
     ],
     'zf-content-negotiation' => [
@@ -140,7 +239,10 @@ return [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceCategory\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => 'HalJson',
-            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Occupation\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\OrganizationType\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Organization\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -158,7 +260,22 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
-            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => [
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Occupation\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\OrganizationType\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Organization\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/hal+json',
                 2 => 'application/json',
@@ -177,7 +294,19 @@ return [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
-            'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceOrganization\\Controller' => [
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Occupation\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\OrganizationType\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Organization\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
@@ -221,16 +350,52 @@ return [
                 'route_identifier_name' => 'service_specification_id',
                 'is_collection' => true,
             ],
-            \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationEntity::class => [
+            \ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationEntity::class => [
                 'entity_identifier_name' => 'id',
-                'route_name' => 'apigility-o2o-service-trade.rest.service-organization',
-                'route_identifier_name' => 'service_organization_id',
+                'route_name' => 'apigility-o2o-service-trade.rest.occupation',
+                'route_identifier_name' => 'occupation_id',
                 'hydrator' => \Zend\Hydrator\ClassMethods::class,
             ],
-            \ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization\ServiceOrganizationCollection::class => [
+            \ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationCollection::class => [
                 'entity_identifier_name' => 'id',
-                'route_name' => 'apigility-o2o-service-trade.rest.service-organization',
-                'route_identifier_name' => 'service_organization_id',
+                'route_name' => 'apigility-o2o-service-trade.rest.occupation',
+                'route_identifier_name' => 'occupation_id',
+                'is_collection' => true,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.organization-type',
+                'route_identifier_name' => 'organization_type_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.organization-type',
+                'route_identifier_name' => 'organization_type_id',
+                'is_collection' => true,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.organization',
+                'route_identifier_name' => 'organization_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.organization',
+                'route_identifier_name' => 'organization_id',
+                'is_collection' => true,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.individual',
+                'route_identifier_name' => 'individual_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.individual',
+                'route_identifier_name' => 'individual_id',
                 'is_collection' => true,
             ],
         ],

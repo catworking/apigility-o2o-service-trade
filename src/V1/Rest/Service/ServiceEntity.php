@@ -2,6 +2,10 @@
 namespace ApigilityO2oServiceTrade\V1\Rest\Service;
 
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
+use ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationEntity;
+use ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualEntity;
+use ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryEntity;
+use ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationEntity;
 
 class ServiceEntity
 {
@@ -35,10 +39,18 @@ class ServiceEntity
      */
     protected $description;
 
+    protected $categories;
+    protected $specifications;
+
+    protected $organization;
+    protected $individual;
+
+    private $hy;
+
     public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\Service $service)
     {
-        $hy = new ClassMethodsHydrator();
-        $hy->hydrate($hy->extract($service), $this);
+        $this->hy = new ClassMethodsHydrator();
+        $this->hy->hydrate($this->hy->extract($service), $this);
     }
 
     public function setId($id)
@@ -94,5 +106,61 @@ class ServiceEntity
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+        return $this;
+    }
+
+    public function getCategories()
+    {
+        $data = array();
+        foreach ($this->categories as $category) {
+            $data[] = $this->hy->extract(new ServiceCategoryEntity($category));
+        }
+
+        return $data;
+    }
+
+    public function setSpecifications($specifications)
+    {
+        $this->specifications = $specifications;
+        return $this;
+    }
+
+    public function getSpecifications()
+    {
+        $data = array();
+        foreach ($this->specifications as $specification) {
+            $data[] = $this->hy->extract(new ServiceSpecificationEntity($specification));
+        }
+
+        return $data;
+    }
+
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getOrganization()
+    {
+        if (empty($this->organization)) return $this->organization;
+        else return $this->hy->extract(new OrganizationEntity($this->organization));
+    }
+
+    public function setIndividual($individual)
+    {
+        $this->individual = $individual;
+        return $this;
+    }
+
+    public function getIndividual()
+    {
+        if (empty($this->individual)) return $this->individual;
+        return $this->hy->extract(new IndividualEntity($this->individual));
     }
 }

@@ -1,10 +1,10 @@
 <?php
-namespace ApigilityO2oServiceTrade\V1\Rest\ServiceOrganization;
+namespace ApigilityO2oServiceTrade\V1\Rest\Organization;
 
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use ApigilityO2oServiceTrade\DoctrineEntity\Organization;
 
-class ServiceOrganizationEntity
+class OrganizationEntity
 {
     /**
      * @Id @Column(type="integer")

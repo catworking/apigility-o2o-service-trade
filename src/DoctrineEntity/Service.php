@@ -76,10 +76,20 @@ class Service
     /**
      * 服务所属机构
      *
-     * @ManyToOne(targetEntity="Individual")
+     * @ManyToOne(targetEntity="Individual", inversedBy="ownServices")
      * @JoinColumn(name="individual_id", referencedColumnName="id")
      */
     protected $individual;
+
+    /**
+     * @ManyToMany(targetEntity="Organization", mappedBy="provideServices")
+     */
+    protected $providerOrganizations;
+
+    /**
+     * @ManyToMany(targetEntity="Individual", mappedBy="provideServices")
+     */
+    protected $providerIndividuals;
 
     /**
      * 服务所属于的分类（可多选）
