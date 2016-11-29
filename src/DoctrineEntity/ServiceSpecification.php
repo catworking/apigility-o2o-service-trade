@@ -39,6 +39,13 @@ class ServiceSpecification
     protected $name;
 
     /**
+     * 规格图片
+     *
+     * @Column(type="string", length=255, nullable=true)
+     */
+    protected $image;
+
+    /**
      * 规格描述
      *
      * @Column(type="text", nullable=true)
@@ -80,6 +87,17 @@ class ServiceSpecification
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
     }
 
     public function setDescription($description)

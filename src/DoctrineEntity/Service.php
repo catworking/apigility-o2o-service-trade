@@ -178,6 +178,17 @@ class Service
         return $this->organization;
     }
 
+    public function setIndividual($individual)
+    {
+        $this->individual = $individual;
+        return $this;
+    }
+
+    public function getIndividual()
+    {
+        return $this->individual;
+    }
+
     public function setCategories($categories)
     {
         $this->categories = $categories;
