@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\ManyToOne;
+use ApigilityUser\DoctrineEntity\User;
+use ApigilityOrder\DoctrineEntity\Order;
 
 /**
  * Class Booking
@@ -31,13 +33,6 @@ class Booking
     protected $id;
 
     /**
-     * 预订的用户
-     *
-     * @Column(type="string", length=20, nullable=true)
-     */
-    protected $user_id;
-
-    /**
      * 预订表单的序列化数据
      *
      * @Column(type="text", nullable=true)
@@ -45,11 +40,20 @@ class Booking
     protected $booking_data;
 
     /**
+     * 预订的用户
+     *
+     * @ManyToOne(targetEntity="ApigilityUser\DoctrineEntity\User")
+     * @JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * 关联的订单
      *
-     * @Column(type="integer", nullable=true)
+     * @ManyToOne(targetEntity="ApigilityOrder\DoctrineEntity\Order")
+     * @JoinColumn(name="order_id", referencedColumnName="id")
      */
-    protected $order_id;
+    protected $order;
 
     /**
      * 所属的服务
