@@ -4,6 +4,8 @@ namespace ApigilityO2oServiceTrade\V1\Rest\Individual;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationEntity;
+use ApigilityUser\DoctrineEntity\User;
+use ApigilityUser\V1\Rest\User\UserEntity;
 
 class IndividualEntity
 {
@@ -35,6 +37,8 @@ class IndividualEntity
      * @JoinColumn(name="occupation_id", referencedColumnName="id")
      */
     protected $occupation;
+
+    protected $user;
 
     private $hy;
 
@@ -86,5 +90,16 @@ class IndividualEntity
     public function getOccupation()
     {
         return $this->hy->extract(new OccupationEntity($this->occupation));
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getUser()
+    {
+        return $this->hy->extract(new UserEntity($this->user));
     }
 }

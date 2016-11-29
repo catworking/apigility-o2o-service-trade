@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApigilityUser\DoctrineEntity\User;
 
 /**
  * Class Individual
@@ -71,6 +72,14 @@ class Individual
      */
     protected $ownServices;
 
+    /**
+     * ApigilityUser组件的用户对象
+     *
+     * @OneToOne(targetEntity="ApigilityUser\DoctrineEntity\User")
+     * @JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -119,6 +128,17 @@ class Individual
     public function getOccupation()
     {
         return $this->occupation;
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 
     public function addOwnService(Service $service)
