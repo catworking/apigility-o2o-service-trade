@@ -61,7 +61,7 @@ class ServiceSpecification
 
     /**
      * 规格所属的服务
-     *
+     * @var Service
      * @ManyToOne(targetEntity="Service", inversedBy="specifications")
      * @JoinColumn(name="service_id", referencedColumnName="id")
      */
@@ -128,6 +128,9 @@ class ServiceSpecification
         return $this;
     }
 
+    /**
+     * @return Service
+     */
     public function getService()
     {
         return $this->service;

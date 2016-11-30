@@ -12,7 +12,8 @@ return [
             'ApigilityO2oServiceTrade\Service\OccupationService' => 'ApigilityO2oServiceTrade\Service\OccupationServiceFactory',
             'ApigilityO2oServiceTrade\Service\IndividualService' => 'ApigilityO2oServiceTrade\Service\IndividualServiceFactory',
             'ApigilityO2oServiceTrade\Service\OrganizationService' => 'ApigilityO2oServiceTrade\Service\OrganizationServiceFactory',
-            'ApigilityO2oServiceTrade\Service\OrganizationTypeService' => 'ApigilityO2oServiceTrade\Service\OrganizationTypeServiceFactory'
+            'ApigilityO2oServiceTrade\Service\OrganizationTypeService' => 'ApigilityO2oServiceTrade\Service\OrganizationTypeServiceFactory',
+            'ApigilityO2oServiceTrade\Service\BookingService' => 'ApigilityO2oServiceTrade\Service\BookingServiceFactory'
         ),
     )
 ];

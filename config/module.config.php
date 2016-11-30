@@ -9,6 +9,7 @@ return [
             \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeResource::class => \ApigilityO2oServiceTrade\V1\Rest\OrganizationType\OrganizationTypeResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationResource::class => \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResource::class => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResource::class => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResourceFactory::class,
         ],
     ],
     'router' => [
@@ -76,6 +77,15 @@ return [
                     ],
                 ],
             ],
+            'apigility-o2o-service-trade.rest.booking' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/booking[/:booking_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -87,6 +97,7 @@ return [
             5 => 'apigility-o2o-service-trade.rest.organization-type',
             6 => 'apigility-o2o-service-trade.rest.organization',
             7 => 'apigility-o2o-service-trade.rest.individual',
+            8 => 'apigility-o2o-service-trade.rest.booking',
         ],
     ],
     'zf-rest' => [
@@ -233,6 +244,27 @@ return [
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualCollection::class,
             'service_name' => 'Individual',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.booking',
+            'route_identifier_name' => 'booking_id',
+            'collection_name' => 'booking',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [
+                0 => 'user_id',
+            ],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingCollection::class,
+            'service_name' => 'Booking',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
@@ -243,6 +275,7 @@ return [
             'ApigilityO2oServiceTrade\\V1\\Rest\\OrganizationType\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Organization\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -280,6 +313,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -307,6 +345,10 @@ return [
                 1 => 'application/json',
             ],
             'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
@@ -398,6 +440,18 @@ return [
                 'route_identifier_name' => 'individual_id',
                 'is_collection' => true,
             ],
+            \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.booking',
+                'route_identifier_name' => 'booking_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.booking',
+                'route_identifier_name' => 'booking_id',
+                'is_collection' => true,
+            ],
         ],
     ],
     'zf-content-validation' => [
@@ -406,6 +460,9 @@ return [
         ],
         'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Controller' => [
             'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\ServiceSpecification\\Validator',
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => [
+            'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -477,6 +534,60 @@ return [
                 'name' => 'price',
                 'description' => '价格',
                 'field_type' => 'float',
+            ],
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Validator' => [
+            0 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'id',
+                'field_type' => 'int',
+            ],
+            1 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'service_specification_id',
+                'description' => '要购买的服务规格',
+                'error_message' => '请输入要购买的服务规格',
+            ],
+            2 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'quantity',
+                'description' => '购买数量',
+                'error_message' => '请输购买数量',
+                'field_type' => 'int',
+            ],
+            3 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'booking_data',
+                'description' => '预订所附加的数据，使用json格式，字段任意扩展',
+                'field_type' => 'string',
+            ],
+        ],
+    ],
+    'zf-mvc-auth' => [
+        'authorization' => [
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => [
+                'collection' => [
+                    'GET' => true,
+                    'POST' => true,
+                    'PUT' => false,
+                    'PATCH' => false,
+                    'DELETE' => false,
+                ],
+                'entity' => [
+                    'GET' => true,
+                    'POST' => false,
+                    'PUT' => false,
+                    'PATCH' => false,
+                    'DELETE' => false,
+                ],
             ],
         ],
     ],

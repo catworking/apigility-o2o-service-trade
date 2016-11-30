@@ -42,9 +42,10 @@ class ServiceService
     /**
      * 获取服务对象列表
      *
-     * @param null $type
-     * @param null $service_category_id
+     * @param $params
      * @return DoctrinePaginatorAdapter
+     * @internal param null $type
+     * @internal param null $service_category_id
      */
     public function getServices($params)
     {
@@ -103,8 +104,9 @@ class ServiceService
     /**
      * 获取服务的分类
      *
-     * @param null $service_id
+     * @param $params
      * @return DoctrinePaginatorAdapter
+     * @internal param null $service_id
      */
     public function getServiceCategories($params)
     {
@@ -122,7 +124,7 @@ class ServiceService
     }
 
     /**
-     * 获取服务的规格
+     * 获取服务的规格列表
      *
      * @param null $service_id
      * @return DoctrinePaginatorAdapter
@@ -140,5 +142,16 @@ class ServiceService
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
         return new DoctrinePaginatorAdapter($doctrine_paginator);
+    }
+
+    /**
+     * 获取服务的规格
+     *
+     * @param $service_specification_id
+     * @return \ApigilityO2oServiceTrade\DoctrineEntity\ServiceSpecification
+     */
+    public function getServiceSpecification($service_specification_id)
+    {
+        return $this->em->find('ApigilityO2oServiceTrade\DoctrineEntity\ServiceSpecification', $service_specification_id);
     }
 }

@@ -1,30 +1,12 @@
 <?php
-/**
- * 服务预订数据
- * Created by PhpStorm.
- * User: figo-007
- * Date: 2016/11/23
- * Time: 15:49
- */
-namespace ApigilityO2oServiceTrade\DoctrineEntity;
+namespace ApigilityO2oServiceTrade\V1\Rest\Booking;
 
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\OneToOne;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\ManyToOne;
-use ApigilityUser\DoctrineEntity\User;
-use ApigilityOrder\DoctrineEntity\Order;
+use ApigilityO2oServiceTrade\V1\Rest\Service\ServiceEntity;
+use ApigilityOrder\V1\Rest\Order\OrderEntity;
+use ApigilityUser\V1\Rest\User\UserEntity;
+use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 
-/**
- * Class Booking
- * @package ApigilityO2oServiceTrade\DoctrineEntity
- * @Entity @Table(name="apigilityo2oservicetrade_booking")
- */
-class Booking
+class BookingEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -63,6 +45,15 @@ class Booking
      */
     protected $service;
 
+    private $hy;
+
+    public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\Booking $booking)
+    {
+
+        $this->hy = new ClassMethodsHydrator();
+        $this->hy->hydrate($this->hy->extract($booking), $this);
+    }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -93,7 +84,7 @@ class Booking
 
     public function getUser()
     {
-        return $this->user;
+        return $this->hy->extract(new UserEntity($this->user));
     }
 
     public function setOrder($order)
@@ -104,7 +95,7 @@ class Booking
 
     public function getOrder()
     {
-        return $this->order;
+        return $this->hy->extract(new OrderEntity($this->order));
     }
 
     public function setService($service)
@@ -115,6 +106,6 @@ class Booking
 
     public function getService()
     {
-        return $this->service;
+        return $this->hy->extract(new ServiceEntity($this->service));
     }
 }
