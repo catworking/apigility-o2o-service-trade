@@ -46,6 +46,13 @@ class ServiceSpecification
     protected $image;
 
     /**
+     * 规格简介
+     *
+     * @Column(type="string", length=800, nullable=true)
+     */
+    protected $summary;
+
+    /**
      * 规格描述
      *
      * @Column(type="text", nullable=true)
@@ -98,6 +105,17 @@ class ServiceSpecification
     public function getImage()
     {
         return $this->image;
+    }
+
+    public function setSummary($summary)
+    {
+        $this->summary = $summary;
+        return $this;
+    }
+
+    public function getSummary()
+    {
+        return $this->summary;
     }
 
     public function setDescription($description)
