@@ -60,7 +60,12 @@ class ServiceService
         if (isset($params->service_category_id)) {
             $qb->innerJoin('s.categories', 'sc');
             if (!empty($where)) $where .= ' AND ';
-            $where .= 'sc.id = :service_category_id';
+            $where .= '(sc.id = :service_category_id';
+            $sub_ids = $this->getServiceCategoryChildrenIds($params->service_category_id, true);
+            if (count($sub_ids) > 0) {
+                $where .= ' OR sc.id IN ('.implode(',',$sub_ids) .')';
+            }
+            $where .= ')';
         }
 
         if (isset($params->owner_organization_id)) {
@@ -102,9 +107,10 @@ class ServiceService
     }
 
     /**
-     * 获取服务的分类
+     * 获取服务的分类列表
      *
      * @param $params
+     * @param bool $recursion
      * @return DoctrinePaginatorAdapter
      * @internal param null $service_id
      */
@@ -121,6 +127,45 @@ class ServiceService
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
         return new DoctrinePaginatorAdapter($doctrine_paginator);
+    }
+
+    /**
+     * 获取一个分类下的所有下级分类id，作为一个数组返回。如果指定$recursion为true，会递归处理所有子级层。
+     *
+     * @param null $service_category_id
+     * @param bool $recursion
+     * @return array
+     */
+    public function getServiceCategoryChildrenIds($service_category_id, $recursion = false)
+    {
+        $qb = new QueryBuilder($this->em);
+        $qb->select('sc.id')->from('ApigilityO2oServiceTrade\DoctrineEntity\ServiceCategory', 'sc');
+
+        if (!empty($service_category_id)) {
+            $qb->innerJoin('sc.parent', 'p')
+                ->where('p.id = :service_category_id')
+                ->setParameter('service_category_id', $service_category_id);
+        }
+
+        $ids = $qb->getQuery()->getResult();
+
+        $ids_data = array();
+        foreach ($ids as $id) {
+            $ids_data[] = $id['id'];
+        }
+
+        if ($recursion && count($ids_data) > 0) {
+            $sub_ids_arrays = array();
+            foreach ($ids_data as $id) {
+                $sub_ids_arrays[] = $this->getServiceCategoryChildrenIds($id, $recursion);
+            }
+
+            foreach ($sub_ids_arrays as $sub_id_array) {
+                $ids_data = array_merge($ids_data, $sub_id_array);
+            }
+        }
+
+        return $ids_data;
     }
 
     /**

@@ -7,6 +7,9 @@ use Zend\ServiceManager\ServiceManager;
 
 class ServiceResource extends AbstractResourceListener
 {
+    /**
+     * @var \ApigilityO2oServiceTrade\Service\ServiceService
+     */
     protected $serviceService;
 
     public function __construct(ServiceManager $services)
