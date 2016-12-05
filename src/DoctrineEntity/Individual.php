@@ -68,6 +68,8 @@ class Individual
     protected $provideServices;
 
     /**
+     * 个体拥有的非标准服务
+     *
      * @OneToMany(targetEntity="Service", mappedBy="individual")
      */
     protected $ownServices;
@@ -79,6 +81,13 @@ class Individual
      * @JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
+
+    /**
+     * 该个体的报道
+     *
+     * @OneToMany(targetEntity="Publish", mappedBy="individual")
+     */
+    protected $publishes;
 
     public function __construct()
     {

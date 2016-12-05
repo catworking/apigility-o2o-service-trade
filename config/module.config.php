@@ -10,6 +10,7 @@ return [
             \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationResource::class => \ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResource::class => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResource::class => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishResource::class => \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishResourceFactory::class,
         ],
     ],
     'router' => [
@@ -86,6 +87,15 @@ return [
                     ],
                 ],
             ],
+            'apigility-o2o-service-trade.rest.publish' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/publish[/:publish_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -98,6 +108,7 @@ return [
             6 => 'apigility-o2o-service-trade.rest.organization',
             7 => 'apigility-o2o-service-trade.rest.individual',
             8 => 'apigility-o2o-service-trade.rest.booking',
+            9 => 'apigility-o2o-service-trade.rest.publish',
         ],
     ],
     'zf-rest' => [
@@ -265,6 +276,26 @@ return [
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingCollection::class,
             'service_name' => 'Booking',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.publish',
+            'route_identifier_name' => 'publish_id',
+            'collection_name' => 'publish',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_query_whitelist' => [
+                0 => 'category_id',
+            ],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishCollection::class,
+            'service_name' => 'Publish',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
@@ -276,6 +307,7 @@ return [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Organization\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -318,6 +350,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -349,6 +386,10 @@ return [
                 1 => 'application/json',
             ],
             'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
@@ -450,6 +491,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'apigility-o2o-service-trade.rest.booking',
                 'route_identifier_name' => 'booking_id',
+                'is_collection' => true,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.publish',
+                'route_identifier_name' => 'publish_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.publish',
+                'route_identifier_name' => 'publish_id',
                 'is_collection' => true,
             ],
         ],
