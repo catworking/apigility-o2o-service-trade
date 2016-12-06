@@ -7,6 +7,8 @@
  */
 namespace ApigilityO2oServiceTrade\Service;
 
+use ApigilityO2oServiceTrade\DoctrineEntity\Individual;
+use ApigilityUser\DoctrineEntity\User;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Doctrine\ORM\QueryBuilder;
@@ -16,12 +18,45 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrinePaginatorAd
 class IndividualService
 {
     protected $classMethodsHydrator;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
     protected $em;
+
+    /**
+     * @var \ApigilityUser\Service\UserService
+     */
+    protected $userService;
 
     public function __construct(ServiceManager $services)
     {
         $this->classMethodsHydrator = new ClassMethodsHydrator();
         $this->em = $services->get('Doctrine\ORM\EntityManager');
+        $this->userService = $services->get('ApigilityUser\Service\UserService');
+    }
+
+    /**
+     * 创建一个个体
+     *
+     * @param $data
+     * @param $user
+     * @return Individual
+     */
+    public function createIndividual($data, User $user = null)
+    {
+        $individual = new Individual();
+        if ($user instanceof User) $individual->setUser($user);
+        else {
+            if (isset($data->user_id)) {
+                $individual->setUser($this->userService->getUser($data->user_id));
+            }
+        }
+
+        $this->em->persist($individual);
+        $this->em->flush();
+
+        return $individual;
     }
 
     /**

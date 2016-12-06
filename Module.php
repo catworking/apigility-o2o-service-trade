@@ -1,6 +1,8 @@
 <?php
 namespace ApigilityO2oServiceTrade;
 
+use Zend\EventManager\EventInterface as Event;
+use Zend\Mvc\MvcEvent;
 use ZF\Apigility\Provider\ApigilityProviderInterface;
 use Zend\Config\Config;
 
@@ -29,5 +31,20 @@ class Module implements ApigilityProviderInterface
                 ],
             ],
         ];
+    }
+
+    public function onBootstrap(MvcEvent $e)
+    {
+        if ($e->getName() == MvcEvent::EVENT_BOOTSTRAP) {
+            $application = $e->getApplication();
+            $services    = $application->getServiceManager();
+
+            $application->getEventManager()->attach(MvcEvent::EVENT_ROUTE, function () use ($services){
+                $events = $services->get('ApigilityUser\Service\UserService')->getEventManager();
+
+                $individual_listener = new IndividualListener($services);
+                $individual_listener->attach($events);
+            });
+        }
     }
 }
