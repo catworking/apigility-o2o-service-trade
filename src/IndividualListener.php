@@ -21,6 +21,11 @@ class IndividualListener implements ListenerAggregateInterface
 
     private $services;
 
+    /**
+     * @var \ApigilityUser\Service\IdentityService
+     */
+    private $identityService;
+
     public function __construct(ServiceManager $services)
     {
         $this->services = $services;
@@ -36,7 +41,9 @@ class IndividualListener implements ListenerAggregateInterface
         $params = $e->getParams();
 
         // 创建个体记录
-        if ($params['user']->getType() == 'individual') {
+        $this->identityService = $this->services->get('ApigilityUser\Service\IdentityService');
+        $identity = $this->identityService->getIdentity($params['user']->getId());
+        if ($identity->getType() == 'individual') {
             $individualService = $this->services->get('ApigilityO2oServiceTrade\Service\IndividualService');
             $individualService->createIndividual('{}',$params['user']);
         }
