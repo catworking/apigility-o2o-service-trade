@@ -316,6 +316,7 @@ return [
             'collection_name' => 'customer',
             'entity_http_methods' => [
                 0 => 'GET',
+                1 => 'PATCH',
             ],
             'collection_http_methods' => [
                 0 => 'GET',
@@ -575,6 +576,9 @@ return [
         'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => [
             'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Validator',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller' => [
+            'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Validator',
+        ],
     ],
     'input_filter_specs' => [
         'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Validator' => [
@@ -710,6 +714,28 @@ return [
                 'continue_if_empty' => true,
                 'field_type' => 'int',
                 'error_message' => '请输入机构',
+            ],
+        ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Validator' => [
+            0 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'id',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'field_type' => 'int',
+            ],
+            1 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'remark',
+                'description' => '备注',
+                'field_type' => 'string',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'error_message' => '请输入客户备注',
             ],
         ],
     ],

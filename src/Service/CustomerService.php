@@ -7,6 +7,7 @@
  */
 namespace ApigilityO2oServiceTrade\Service;
 
+use ApigilityUser\DoctrineEntity\Identity;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Doctrine\ORM\QueryBuilder;
@@ -76,5 +77,18 @@ class CustomerService
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
         return new DoctrinePaginatorAdapter($doctrine_paginator);
+    }
+
+    public function updateCustomer($customer_id, $data, Identity $identity)
+    {
+        $customer = $this->getCustomer($customer_id);
+        if ($identity->getType() === 'individual' && $customer->getIndividual()->getUser()->getId() === $identity->getId()) {
+            if (isset($data->remark)) $customer->setRemark($data->remark);
+            $this->em->flush();
+
+            return $customer;
+        } else {
+            throw new \Exception('没有权限修改客户数据', 403);
+        }
     }
 }
