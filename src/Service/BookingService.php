@@ -107,15 +107,32 @@ class BookingService
         $qb->select('b')->from('ApigilityO2oServiceTrade\DoctrineEntity\Booking', 'b');
 
         $where = null;
+        if (isset($params->status)) {
+            $qb->innerJoin('b.order', 'bo');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'bo.status = :status';
+        }
+
         if (isset($params->user_id)) {
             $qb->innerJoin('b.user', 'bu');
             if (!empty($where)) $where .= ' AND ';
-            $where = 'bu.id = :user_id';
+            $where .= 'bu.id = :user_id';
+        }
+
+        if (isset($params->individual_id)) {
+            $qb->innerJoin('b.service', 's');
+            $qb->innerJoin('s.individual', 'si');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= '(si.id = :individual_id)';
         }
 
         if (!empty($where)) {
             $qb->where($where);
+            if (isset($params->status)) $qb->setParameter('status', $params->status);
             if (isset($params->user_id)) $qb->setParameter('user_id', $params->user_id);
+            if (isset($params->individual_id)) {
+                $qb->setParameter('individual_id', $params->individual_id);
+            }
         }
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());

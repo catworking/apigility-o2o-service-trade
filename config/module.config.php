@@ -282,6 +282,8 @@ return [
             ],
             'collection_query_whitelist' => [
                 0 => 'user_id',
+                1 => 'individual_id',
+                2 => 'status',
             ],
             'page_size' => 25,
             'page_size_param' => null,
