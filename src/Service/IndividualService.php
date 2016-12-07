@@ -97,10 +97,23 @@ class IndividualService
         $qb = new QueryBuilder($this->em);
         $qb->select('i')->from('ApigilityO2oServiceTrade\DoctrineEntity\Individual', 'i');
 
+        $where = null;
         if (isset($params->service_id)) {
-            $qb->innerJoin('i.provideServices', 'ips')
-                ->where('ips.id = :service_id')
-                ->setParameter('service_id', $params->service_id);
+            $qb->innerJoin('i.provideServices', 'ips');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'ips.id = :service_id';
+        }
+
+        if (isset($params->user_id)) {
+            $qb->innerJoin('i.user', 'u');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'u.id = :user_id';
+        }
+
+        if (!empty($where)) {
+            $qb->where($where);
+            if ($params->service_id) $qb->setParameter('service_id', $params->service_id);
+            if ($params->user_id) $qb->setParameter('user_id', $params->user_id);
         }
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());

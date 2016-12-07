@@ -249,6 +249,7 @@ return [
             ],
             'collection_query_whitelist' => [
                 0 => 'service_id',
+                1 => 'user_id',
             ],
             'page_size' => 25,
             'page_size_param' => null,
