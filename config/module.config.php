@@ -242,6 +242,7 @@ return [
             'collection_name' => 'individual',
             'entity_http_methods' => [
                 0 => 'GET',
+                1 => 'PATCH',
             ],
             'collection_http_methods' => [
                 0 => 'GET',
@@ -517,6 +518,9 @@ return [
         'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => [
             'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Validator',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => [
+            'input_filter' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Validator',
+        ],
     ],
     'input_filter_specs' => [
         'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Validator' => [
@@ -623,6 +627,37 @@ return [
                 'field_type' => 'string',
             ],
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Validator' => [
+            0 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'id',
+                'field_type' => 'int',
+            ],
+            1 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'occupation_id',
+                'description' => '职业',
+                'error_message' => '请输入职业',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'field_type' => 'int',
+            ],
+            2 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'organization_id',
+                'description' => '机构',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'field_type' => 'int',
+                'error_message' => '请输入机构',
+            ],
+        ],
     ],
     'zf-mvc-auth' => [
         'authorization' => [
@@ -639,6 +674,22 @@ return [
                     'POST' => false,
                     'PUT' => false,
                     'PATCH' => false,
+                    'DELETE' => false,
+                ],
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => [
+                'collection' => [
+                    'GET' => false,
+                    'POST' => false,
+                    'PUT' => false,
+                    'PATCH' => false,
+                    'DELETE' => false,
+                ],
+                'entity' => [
+                    'GET' => false,
+                    'POST' => false,
+                    'PUT' => false,
+                    'PATCH' => true,
                     'DELETE' => false,
                 ],
             ],
