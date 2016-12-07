@@ -11,6 +11,7 @@ return [
             \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResource::class => \ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResource::class => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishResource::class => \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerResource::class => \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerResourceFactory::class,
         ],
     ],
     'router' => [
@@ -96,6 +97,15 @@ return [
                     ],
                 ],
             ],
+            'apigility-o2o-service-trade.rest.customer' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/customer[/:customer_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -109,6 +119,7 @@ return [
             7 => 'apigility-o2o-service-trade.rest.individual',
             8 => 'apigility-o2o-service-trade.rest.booking',
             9 => 'apigility-o2o-service-trade.rest.publish',
+            10 => 'apigility-o2o-service-trade.rest.customer',
         ],
     ],
     'zf-rest' => [
@@ -298,6 +309,26 @@ return [
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishCollection::class,
             'service_name' => 'Publish',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.customer',
+            'route_identifier_name' => 'customer_id',
+            'collection_name' => 'customer',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_query_whitelist' => [
+                0 => 'individual_id',
+            ],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerCollection::class,
+            'service_name' => 'Customer',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
@@ -310,6 +341,7 @@ return [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -357,6 +389,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -392,6 +429,10 @@ return [
                 1 => 'application/json',
             ],
             'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
@@ -505,6 +546,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'apigility-o2o-service-trade.rest.publish',
                 'route_identifier_name' => 'publish_id',
+                'is_collection' => true,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.customer',
+                'route_identifier_name' => 'customer_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.customer',
+                'route_identifier_name' => 'customer_id',
                 'is_collection' => true,
             ],
         ],
