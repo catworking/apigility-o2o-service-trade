@@ -1,10 +1,9 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\ServiceCategory;
 
-use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
-use ApigilityO2oServiceTrade\DoctrineEntity\ServiceCategory;
+use ApigilityCatworkFoundation\Base\ApigilityEntity;
 
-class ServiceCategoryEntity
+class ServiceCategoryEntity extends ApigilityEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -18,12 +17,6 @@ class ServiceCategoryEntity
      * @Column(type="string", length=50, nullable=true)
      */
     protected $name;
-
-    public function __construct(ServiceCategory $category)
-    {
-        $hy = new ClassMethodsHydrator();
-        $hy->hydrate($hy->extract($category), $this);
-    }
 
     public function setId($id)
     {

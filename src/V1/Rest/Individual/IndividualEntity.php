@@ -1,13 +1,13 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\Individual;
 
-use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Occupation\OccupationEntity;
 use ApigilityUser\DoctrineEntity\User;
 use ApigilityUser\V1\Rest\User\UserEntity;
 
-class IndividualEntity
+class IndividualEntity extends ApigilityObjectStorageAwareEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -40,14 +40,6 @@ class IndividualEntity
 
     protected $user;
 
-    private $hy;
-
-    public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\Individual $individual)
-    {
-        $this->hy = new ClassMethodsHydrator();
-        $this->hy->hydrate($this->hy->extract($individual), $this);
-    }
-
     public function setId($id)
     {
         $this->id = $id;
@@ -78,7 +70,7 @@ class IndividualEntity
 
     public function getOrganization()
     {
-        return $this->hy->extract(new OrganizationEntity($this->organization));
+        return $this->hydrator->extract(new OrganizationEntity($this->organization, $this->serviceManager));
     }
 
     public function setOccupation($occupation)
@@ -89,7 +81,7 @@ class IndividualEntity
 
     public function getOccupation()
     {
-        return $this->hy->extract(new OccupationEntity($this->occupation));
+        return $this->hydrator->extract(new OccupationEntity($this->occupation));
     }
 
     public function setUser(User $user)
@@ -100,6 +92,6 @@ class IndividualEntity
 
     public function getUser()
     {
-        return $this->hy->extract(new UserEntity($this->user));
+        return $this->hydrator->extract(new UserEntity($this->user, $this->serviceManager));
     }
 }

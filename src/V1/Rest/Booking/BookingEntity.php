@@ -1,12 +1,12 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\Booking;
 
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Service\ServiceEntity;
 use ApigilityOrder\V1\Rest\Order\OrderEntity;
 use ApigilityUser\V1\Rest\User\UserEntity;
-use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 
-class BookingEntity
+class BookingEntity extends ApigilityObjectStorageAwareEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -45,15 +45,6 @@ class BookingEntity
      */
     protected $service;
 
-    private $hy;
-
-    public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\Booking $booking)
-    {
-
-        $this->hy = new ClassMethodsHydrator();
-        $this->hy->hydrate($this->hy->extract($booking), $this);
-    }
-
     public function setId($id)
     {
         $this->id = $id;
@@ -84,7 +75,7 @@ class BookingEntity
 
     public function getUser()
     {
-        return $this->hy->extract(new UserEntity($this->user));
+        return $this->hydrator->extract(new UserEntity($this->user, $this->serviceManager));
     }
 
     public function setOrder($order)
@@ -95,7 +86,7 @@ class BookingEntity
 
     public function getOrder()
     {
-        return $this->hy->extract(new OrderEntity($this->order));
+        return $this->hydrator->extract(new OrderEntity($this->order, $this->serviceManager));
     }
 
     public function setService($service)
@@ -106,6 +97,7 @@ class BookingEntity
 
     public function getService()
     {
-        return $this->hy->extract(new ServiceEntity($this->service));
+        if (empty($this->service)) return $this->service;
+        else return $this->hydrator->extract(new ServiceEntity($this->service, $this->serviceManager));
     }
 }

@@ -1,19 +1,10 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\Occupation;
 
-use Zend\Paginator\Paginator;
+use ApigilityCatworkFoundation\Base\ApigilityCollection;
 use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
-class OccupationCollection extends Paginator
+class OccupationCollection extends ApigilityCollection
 {
-    public function getCurrentItems()
-    {
-        $set = parent::getCurrentItems();
-        $collection = new ZendArrayObject();
-
-        foreach ($set as $item) {
-            $collection->append(new OccupationEntity($item));
-        }
-        return $collection;
-    }
+    protected $itemType = OccupationEntity::class;
 }

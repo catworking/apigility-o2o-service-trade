@@ -1,13 +1,13 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\Service;
 
-use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualEntity;
 use ApigilityO2oServiceTrade\V1\Rest\ServiceCategory\ServiceCategoryEntity;
 use ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification\ServiceSpecificationEntity;
 
-class ServiceEntity
+class ServiceEntity extends ApigilityObjectStorageAwareEntity
 {
     protected $id;
 
@@ -44,14 +44,6 @@ class ServiceEntity
 
     protected $organization;
     protected $individual;
-
-    private $hy;
-
-    public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\Service $service)
-    {
-        $this->hy = new ClassMethodsHydrator();
-        $this->hy->hydrate($this->hy->extract($service), $this);
-    }
 
     public function setId($id)
     {
@@ -94,7 +86,7 @@ class ServiceEntity
 
     public function getImage()
     {
-        return $this->image;
+        return $this->renderUriToUrl($this->image);
     }
 
     public function setDescription($description)
@@ -116,12 +108,7 @@ class ServiceEntity
 
     public function getCategories()
     {
-        $data = array();
-        foreach ($this->categories as $category) {
-            $data[] = $this->hy->extract(new ServiceCategoryEntity($category));
-        }
-
-        return $data;
+        return $this->getJsonValueFromDoctrineCollection($this->categories, ServiceCategoryEntity::class);
     }
 
     public function setSpecifications($specifications)
@@ -132,12 +119,7 @@ class ServiceEntity
 
     public function getSpecifications()
     {
-        $data = array();
-        foreach ($this->specifications as $specification) {
-            $data[] = $this->hy->extract(new ServiceSpecificationEntity($specification));
-        }
-
-        return $data;
+        return $this->getJsonValueFromDoctrineCollection($this->specifications, ServiceSpecificationEntity::class, $this->serviceManager);
     }
 
     public function setOrganization($organization)
@@ -149,7 +131,7 @@ class ServiceEntity
     public function getOrganization()
     {
         if (empty($this->organization)) return $this->organization;
-        else return $this->hy->extract(new OrganizationEntity($this->organization));
+        else return $this->hydrator->extract(new OrganizationEntity($this->organization, $this->serviceManager));
     }
 
     public function setIndividual($individual)
@@ -161,6 +143,6 @@ class ServiceEntity
     public function getIndividual()
     {
         if (empty($this->individual)) return $this->individual;
-        return $this->hy->extract(new IndividualEntity($this->individual));
+        return $this->hydrator->extract(new IndividualEntity($this->individual, $this->serviceManager));
     }
 }

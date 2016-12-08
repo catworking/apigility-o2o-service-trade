@@ -33,7 +33,7 @@ class CustomerResource extends ApigilityResource
     public function fetch($id)
     {
         try {
-            return new CustomerEntity($this->customerService->getCustomer($id));
+            return new CustomerEntity($this->customerService->getCustomer($id), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
@@ -42,7 +42,7 @@ class CustomerResource extends ApigilityResource
     public function fetchAll($params = [])
     {
         try {
-            return new CustomerCollection($this->customerService->getCustomers($params));
+            return new CustomerCollection($this->customerService->getCustomers($params), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
@@ -52,7 +52,7 @@ class CustomerResource extends ApigilityResource
     {
         try {
             return new CustomerEntity($this->customerService->updateCustomer($id, $data,
-                $this->identityService->getIdentity($this->userService->getAuthUser()->getId())));
+                $this->identityService->getIdentity($this->userService->getAuthUser()->getId())), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }

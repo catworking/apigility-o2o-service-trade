@@ -40,7 +40,7 @@ class BookingResource extends ApigilityResource
             $user = $this->userService->getAuthUser();
 
             $booking = $this->bookingService->createBooking($user, $data->service_specification_id, $data->quantity, $booking_data);
-            return new BookingEntity($booking);
+            return new BookingEntity($booking, $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
@@ -55,7 +55,7 @@ class BookingResource extends ApigilityResource
     public function fetch($id)
     {
         try {
-            return new BookingEntity($this->bookingService->getBooking($id));
+            return new BookingEntity($this->bookingService->getBooking($id), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
@@ -70,7 +70,7 @@ class BookingResource extends ApigilityResource
     public function fetchAll($params = [])
     {
         try {
-            return new BookingCollection($this->bookingService->getBookings($params));
+            return new BookingCollection($this->bookingService->getBookings($params), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }

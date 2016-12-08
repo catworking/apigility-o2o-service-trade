@@ -1,10 +1,11 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification;
 
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use ApigilityO2oServiceTrade\DoctrineEntity\ServiceSpecification;
 
-class ServiceSpecificationEntity
+class ServiceSpecificationEntity extends ApigilityObjectStorageAwareEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -47,12 +48,6 @@ class ServiceSpecificationEntity
      */
     protected $price;
 
-    public function __construct(ServiceSpecification $specification)
-    {
-        $hy = new ClassMethodsHydrator();
-        $hy->hydrate($hy->extract($specification), $this);
-    }
-
     public function setId($id)
     {
         $this->id = $id;
@@ -83,7 +78,7 @@ class ServiceSpecificationEntity
 
     public function getImage()
     {
-        return $this->image;
+        return $this->renderUriToUrl($this->image);
     }
 
     public function setSummary($summary)

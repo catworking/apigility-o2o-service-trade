@@ -1,19 +1,9 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\ServiceSpecification;
 
-use Zend\Paginator\Paginator;
-use Zend\Stdlib\ArrayObject as ZendArrayObject;
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareCollection;
 
-class ServiceSpecificationCollection extends Paginator
+class ServiceSpecificationCollection extends ApigilityObjectStorageAwareCollection
 {
-    public function getCurrentItems()
-    {
-        $set = parent::getCurrentItems();
-        $collection = new ZendArrayObject();
-
-        foreach ($set as $item) {
-            $collection->append(new ServiceSpecificationEntity($item));
-        }
-        return $collection;
-    }
+    protected $itemType = ServiceSpecificationEntity::class;
 }

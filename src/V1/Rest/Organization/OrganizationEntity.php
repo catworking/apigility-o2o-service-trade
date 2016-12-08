@@ -1,10 +1,9 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\Organization;
 
-use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
-use ApigilityO2oServiceTrade\DoctrineEntity\Organization;
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 
-class OrganizationEntity
+class OrganizationEntity extends ApigilityObjectStorageAwareEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -32,12 +31,6 @@ class OrganizationEntity
      * @Column(type="string", length=255, nullable=true)
      */
     protected $image;
-
-    public function __construct(Organization $organization)
-    {
-        $hy = new ClassMethodsHydrator();
-        $hy->hydrate($hy->extract($organization), $this);
-    }
 
     public function setId($id)
     {
@@ -80,6 +73,6 @@ class OrganizationEntity
 
     public function getImage()
     {
-        return $this->image;
+        return $this->renderUriToUrl($this->image);
     }
 }

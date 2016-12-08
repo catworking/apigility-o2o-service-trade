@@ -1,9 +1,9 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\OrganizationType;
 
-use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
+use ApigilityCatworkFoundation\Base\ApigilityEntity;
 
-class OrganizationTypeEntity
+class OrganizationTypeEntity extends ApigilityEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -17,14 +17,6 @@ class OrganizationTypeEntity
      * @Column(type="string", length=50, nullable=true)
      */
     protected $name;
-
-    private $hy;
-
-    public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\OrganizationType $organization_type)
-    {
-        $this->hy = new ClassMethodsHydrator();
-        $this->hy->hydrate($this->hy->extract($organization_type), $this);
-    }
 
     public function setId($id)
     {

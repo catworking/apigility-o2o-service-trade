@@ -2,10 +2,11 @@
 namespace ApigilityO2oServiceTrade\V1\Rest\Publish;
 
 use ApigilityBlog\V1\Rest\Article\ArticleEntity;
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualEntity;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 
-class PublishEntity
+class PublishEntity extends ApigilityObjectStorageAwareEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -29,14 +30,6 @@ class PublishEntity
      */
     protected $article;
 
-    private $hy;
-
-    public function __construct(\ApigilityO2oServiceTrade\DoctrineEntity\Publish $publish)
-    {
-        $this->hy = new ClassMethodsHydrator();
-        $this->hy->hydrate($this->hy->extract($publish), $this);
-    }
-
     public function setId($id)
     {
         $this->id = $id;
@@ -56,7 +49,8 @@ class PublishEntity
 
     public function getIndividual()
     {
-        return $this->hy->extract(new IndividualEntity($this->individual));
+        if (empty($this->individual)) return $this->individual;
+        else return $this->hydrator->extract(new IndividualEntity($this->individual, $this->serviceManager));
     }
 
     public function setArticle($article)
@@ -67,6 +61,6 @@ class PublishEntity
 
     public function getArticle()
     {
-        return $this->hy->extract(new ArticleEntity($this->article));
+        return $this->hydrator->extract(new ArticleEntity($this->article, $this->serviceManager));
     }
 }

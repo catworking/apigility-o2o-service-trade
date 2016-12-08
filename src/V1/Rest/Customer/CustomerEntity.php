@@ -2,10 +2,11 @@
 namespace ApigilityO2oServiceTrade\V1\Rest\Customer;
 
 use ApigilityCatworkFoundation\Base\ApigilityEntity;
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualEntity;
 use ApigilityUser\V1\Rest\User\UserEntity;
 
-class CustomerEntity extends ApigilityEntity
+class CustomerEntity extends ApigilityObjectStorageAwareEntity
 {
     /**
      * @Id @Column(type="integer")
@@ -63,7 +64,7 @@ class CustomerEntity extends ApigilityEntity
 
     public function getIndividual()
     {
-        return $this->hydrator->extract(new IndividualEntity($this->individual));
+        return $this->hydrator->extract(new IndividualEntity($this->individual, $this->serviceManager));
     }
 
     public function setUser($user)
@@ -74,7 +75,7 @@ class CustomerEntity extends ApigilityEntity
 
     public function getUser()
     {
-        return $this->hydrator->extract(new UserEntity($this->user));
+        return $this->hydrator->extract(new UserEntity($this->user, $this->serviceManager));
     }
 
     public function setRemark($remark)

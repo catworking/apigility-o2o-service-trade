@@ -1,19 +1,9 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\Individual;
 
-use Zend\Paginator\Paginator;
-use Zend\Stdlib\ArrayObject as ZendArrayObject;
+use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareCollection;
 
-class IndividualCollection extends Paginator
+class IndividualCollection extends ApigilityObjectStorageAwareCollection
 {
-    public function getCurrentItems()
-    {
-        $set = parent::getCurrentItems();
-        $collection = new ZendArrayObject();
-
-        foreach ($set as $item) {
-            $collection->append(new IndividualEntity($item));
-        }
-        return $collection;
-    }
+    protected $itemType = IndividualEntity::class;
 }

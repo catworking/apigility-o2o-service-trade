@@ -39,7 +39,7 @@ class IndividualResource extends ApigilityResource
     public function fetch($id)
     {
         try {
-            return new IndividualEntity($this->individualService->getIndividual($id));
+            return new IndividualEntity($this->individualService->getIndividual($id), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
@@ -54,7 +54,7 @@ class IndividualResource extends ApigilityResource
     public function fetchAll($params = [])
     {
         try {
-            return new IndividualCollection($this->individualService->getIndividuals($params));
+            return new IndividualCollection($this->individualService->getIndividuals($params), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
@@ -65,7 +65,7 @@ class IndividualResource extends ApigilityResource
         try {
             $auth_user = $this->userService->getAuthUser();
             $identity = $this->identityService->getIdentity($auth_user->getId());
-            return new IndividualEntity($this->individualService->updateIndividual($id, $data, $identity));
+            return new IndividualEntity($this->individualService->updateIndividual($id, $data, $identity), $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
