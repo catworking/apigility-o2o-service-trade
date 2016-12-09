@@ -70,7 +70,8 @@ class IndividualEntity extends ApigilityObjectStorageAwareEntity
 
     public function getOrganization()
     {
-        return $this->hydrator->extract(new OrganizationEntity($this->organization, $this->serviceManager));
+        if (empty($this->organization)) return $this->organization;
+        else return $this->hydrator->extract(new OrganizationEntity($this->organization, $this->serviceManager));
     }
 
     public function setOccupation($occupation)
@@ -81,7 +82,8 @@ class IndividualEntity extends ApigilityObjectStorageAwareEntity
 
     public function getOccupation()
     {
-        return $this->hydrator->extract(new OccupationEntity($this->occupation));
+        if (empty($this->occupation)) return $this->occupation;
+        else return $this->hydrator->extract(new OccupationEntity($this->occupation));
     }
 
     public function setUser(User $user)
@@ -92,6 +94,7 @@ class IndividualEntity extends ApigilityObjectStorageAwareEntity
 
     public function getUser()
     {
-        return $this->hydrator->extract(new UserEntity($this->user, $this->serviceManager));
+        if (empty($this->user)) return $this->user;
+        else return $this->hydrator->extract(new UserEntity($this->user, $this->serviceManager));
     }
 }
