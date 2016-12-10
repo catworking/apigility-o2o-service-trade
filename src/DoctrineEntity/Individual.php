@@ -89,10 +89,18 @@ class Individual
      */
     protected $publishes;
 
+    /**
+     * 评价
+     *
+     * @OneToMany(targetEntity="Appraisal", mappedBy="individual")
+     */
+    protected $appraisals;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->ownServices = new ArrayCollection();
+        $this->appraisals = new ArrayCollection();
     }
 
     public function setId($id)
@@ -163,5 +171,22 @@ class Individual
     {
         $this->provideServices[] = $service;
         return $this;
+    }
+
+    public function addAppraisal($appraisal)
+    {
+        $this->appraisals[] = $appraisal;
+        return $this;
+    }
+
+    public function setAppraisals($appraisals)
+    {
+        $this->appraisals = $appraisals;
+        return $this;
+    }
+
+    public function getAppraisals()
+    {
+        return $this->appraisals;
     }
 }

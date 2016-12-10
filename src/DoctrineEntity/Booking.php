@@ -63,6 +63,13 @@ class Booking
      */
     protected $service;
 
+    /**
+     * 评价
+     *
+     * @OneToOne(targetEntity="Appraisal", mappedBy="booking")
+     */
+    protected $appraisal;
+
     public function setId($id)
     {
         $this->id = $id;
@@ -113,8 +120,22 @@ class Booking
         return $this;
     }
 
+    /**
+     * @return Service
+     */
     public function getService()
     {
         return $this->service;
+    }
+
+    public function setAppraisal($appraisal)
+    {
+        $this->appraisal = $appraisal;
+        return $this;
+    }
+
+    public function getAppraisal()
+    {
+        return $this->appraisal;
     }
 }

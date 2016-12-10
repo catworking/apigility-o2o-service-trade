@@ -106,10 +106,20 @@ class Service
      */
     protected $specifications;
 
+    /**
+     * 评价
+     *
+     * @OneToMany(targetEntity="Appraisal", mappedBy="service")
+     */
+    protected $appraisals;
+
     public function __construct()
     {
+        $this->providerOrganizations = new ArrayCollection();
+        $this->providerIndividuals = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->specifications = new ArrayCollection();
+        $this->appraisals = new ArrayCollection();
     }
 
     public function setId($id)
@@ -189,6 +199,28 @@ class Service
         return $this->individual;
     }
 
+    public function setProviderOrganizations($provider_organizations)
+    {
+        $this->providerOrganizations = $provider_organizations;
+        return $this;
+    }
+
+    public function getProviderOrganizations()
+    {
+        return $this->providerOrganizations;
+    }
+
+    public function setProviderIndividuals($provider_individuals)
+    {
+        $this->providerIndividuals = $provider_individuals;
+        return $this;
+    }
+
+    public function getProviderIndividuals()
+    {
+        return $this->providerIndividuals;
+    }
+
     public function setCategories($categories)
     {
         $this->categories = $categories;
@@ -203,5 +235,22 @@ class Service
     public function getSpecifications()
     {
         return $this->specifications;
+    }
+
+    public function addAppraisal($appraisal)
+    {
+        $this->appraisals[] = $appraisal;
+        return $this;
+    }
+
+    public function setAppraisals($appraisals)
+    {
+        $this->appraisals = $appraisals;
+        return $this;
+    }
+
+    public function getAppraisals()
+    {
+        return $this->appraisals;
     }
 }

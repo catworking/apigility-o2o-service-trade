@@ -12,6 +12,7 @@ return [
             \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResource::class => \ApigilityO2oServiceTrade\V1\Rest\Booking\BookingResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishResource::class => \ApigilityO2oServiceTrade\V1\Rest\Publish\PublishResourceFactory::class,
             \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerResource::class => \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerResourceFactory::class,
+            \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalResource::class => \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalResourceFactory::class,
         ],
     ],
     'router' => [
@@ -106,6 +107,15 @@ return [
                     ],
                 ],
             ],
+            'apigility-o2o-service-trade.rest.appraisal' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/o2oservicetrade/appraisal[/:appraisal_id]',
+                    'defaults' => [
+                        'controller' => 'ApigilityO2oServiceTrade\\V1\\Rest\\Appraisal\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -120,6 +130,7 @@ return [
             8 => 'apigility-o2o-service-trade.rest.booking',
             9 => 'apigility-o2o-service-trade.rest.publish',
             10 => 'apigility-o2o-service-trade.rest.customer',
+            11 => 'apigility-o2o-service-trade.rest.appraisal',
         ],
     ],
     'zf-rest' => [
@@ -332,6 +343,25 @@ return [
             'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Customer\CustomerCollection::class,
             'service_name' => 'Customer',
         ],
+        'ApigilityO2oServiceTrade\\V1\\Rest\\Appraisal\\Controller' => [
+            'listener' => \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalResource::class,
+            'route_name' => 'apigility-o2o-service-trade.rest.appraisal',
+            'route_identifier_name' => 'appraisal_id',
+            'collection_name' => 'appraisal',
+            'entity_http_methods' => [
+                0 => 'GET',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalEntity::class,
+            'collection_class' => \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalCollection::class,
+            'service_name' => 'Appraisal',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
@@ -345,6 +375,7 @@ return [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Booking\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Publish\\Controller' => 'HalJson',
             'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller' => 'HalJson',
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Appraisal\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -397,6 +428,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Appraisal\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'ApigilityO2oServiceTrade\\V1\\Rest\\Service\\Controller' => [
@@ -436,6 +472,10 @@ return [
                 1 => 'application/json',
             ],
             'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Controller' => [
+                0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
+                1 => 'application/json',
+            ],
+            'ApigilityO2oServiceTrade\\V1\\Rest\\Appraisal\\Controller' => [
                 0 => 'application/vnd.apigility-o2o-service-trade.v1+json',
                 1 => 'application/json',
             ],
@@ -561,6 +601,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'apigility-o2o-service-trade.rest.customer',
                 'route_identifier_name' => 'customer_id',
+                'is_collection' => true,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.appraisal',
+                'route_identifier_name' => 'appraisal_id',
+                'hydrator' => \Zend\Hydrator\ClassMethods::class,
+            ],
+            \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'apigility-o2o-service-trade.rest.appraisal',
+                'route_identifier_name' => 'appraisal_id',
                 'is_collection' => true,
             ],
         ],
