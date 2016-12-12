@@ -139,6 +139,7 @@ class IndividualService
             } else {
                 if (isset($data->occupation_id)) $individual->setOccupation($this->occupationService->getOccupation($data->occupation_id));
                 if (isset($data->organization_id)) $individual->setOrganization($this->organizationService->getOrganization($data->organization_id));
+                if (isset($data->description)) $individual->setDescription($data->description);
 
                 $this->em->flush();
 
