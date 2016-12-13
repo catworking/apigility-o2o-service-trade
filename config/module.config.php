@@ -355,7 +355,12 @@ return [
                 0 => 'GET',
                 1 => 'POST',
             ],
-            'collection_query_whitelist' => [],
+            'collection_query_whitelist' => [
+                0 => 'user_id',
+                1 => 'booking_id',
+                2 => 'service_id',
+                3 => 'individual_id',
+            ],
             'page_size' => 25,
             'page_size_param' => null,
             'entity_class' => \ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalEntity::class,
