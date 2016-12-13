@@ -108,9 +108,19 @@ class BookingService
 
         $where = null;
         if (isset($params->status)) {
+
             $qb->innerJoin('b.order', 'bo');
             if (!empty($where)) $where .= ' AND ';
-            $where .= 'bo.status = :status';
+
+            // 处理多个状态
+            $statuses = explode(',', $params->status);
+
+            $where .= '(';
+            foreach ($statuses as $k=>$status) {
+                if ($k > 0) $where .= ' OR ';
+                $where .= 'bo.status = :status'.$k;
+            }
+            $where .= ')';
         }
 
         if (isset($params->user_id)) {
@@ -128,7 +138,13 @@ class BookingService
 
         if (!empty($where)) {
             $qb->where($where);
-            if (isset($params->status)) $qb->setParameter('status', $params->status);
+            if (isset($params->status)) {
+                $statuses = explode(',', $params->status);
+                foreach ($statuses as $k=>$status) {
+                    $qb->setParameter('status'.$k, $status);
+                }
+
+            }
             if (isset($params->user_id)) $qb->setParameter('user_id', $params->user_id);
             if (isset($params->individual_id)) {
                 $qb->setParameter('individual_id', $params->individual_id);
