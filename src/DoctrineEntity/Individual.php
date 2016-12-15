@@ -96,11 +96,17 @@ class Individual
      */
     protected $appraisals;
 
+    /**
+     * @OneToMany(targetEntity="Customer", mappedBy="individual")
+     */
+    protected $customers;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->ownServices = new ArrayCollection();
         $this->appraisals = new ArrayCollection();
+        $this->customers = new ArrayCollection();
     }
 
     public function setId($id)
@@ -188,5 +194,22 @@ class Individual
     public function getAppraisals()
     {
         return $this->appraisals;
+    }
+
+    public function setCustomers($customers)
+    {
+        $this->customers = $customers;
+        return $this;
+    }
+
+    public function getCustomers()
+    {
+        return $this->customers;
+    }
+
+    public function addCustomer($customer)
+    {
+        $this->customers[] = $customer;
+        return $this;
     }
 }

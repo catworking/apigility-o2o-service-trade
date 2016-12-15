@@ -2,6 +2,8 @@
 namespace ApigilityO2oServiceTrade\V1\Rest\Booking;
 
 use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
+use ApigilityO2oServiceTrade\DoctrineEntity\Appraisal;
+use ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Service\ServiceEntity;
 use ApigilityOrder\V1\Rest\Order\OrderEntity;
 use ApigilityUser\V1\Rest\User\UserEntity;
@@ -44,6 +46,13 @@ class BookingEntity extends ApigilityObjectStorageAwareEntity
      * @JoinColumn(name="service_id", referencedColumnName="id")
      */
     protected $service;
+
+    /**
+     * 评价
+     *
+     * @OneToOne(targetEntity="Appraisal", mappedBy="booking")
+     */
+    protected $appraisal;
 
     public function setId($id)
     {
@@ -99,5 +108,16 @@ class BookingEntity extends ApigilityObjectStorageAwareEntity
     {
         if (empty($this->service)) return $this->service;
         else return $this->hydrator->extract(new ServiceEntity($this->service, $this->serviceManager));
+    }
+
+    public function setAppraisal($appraisal)
+    {
+        $this->appraisal = $appraisal;
+        return $this;
+    }
+
+    public function getAppraisal()
+    {
+        return (boolean)$this->appraisal;
     }
 }

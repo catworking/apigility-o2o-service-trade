@@ -40,6 +40,11 @@ class IndividualEntity extends ApigilityObjectStorageAwareEntity
 
     protected $user;
 
+    /**
+     * @OneToMany(targetEntity="Customer", mappedBy="individual")
+     */
+    protected $customers;
+
     public function setId($id)
     {
         $this->id = $id;
@@ -96,5 +101,16 @@ class IndividualEntity extends ApigilityObjectStorageAwareEntity
     {
         if (empty($this->user)) return $this->user;
         else return $this->hydrator->extract(new UserEntity($this->user, $this->serviceManager));
+    }
+
+    public function setCustomers($customers)
+    {
+        $this->customers = $customers;
+        return $this;
+    }
+
+    public function getCustomers()
+    {
+        return count($this->customers);
     }
 }
