@@ -8,6 +8,7 @@
 namespace ApigilityO2oServiceTrade\Service;
 
 use ApigilityUser\DoctrineEntity\Identity;
+use ApigilityUser\DoctrineEntity\User;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Doctrine\ORM\QueryBuilder;
@@ -34,6 +35,25 @@ class CustomerService
         $this->classMethodsHydrator = new ClassMethodsHydrator();
         $this->em = $services->get('Doctrine\ORM\EntityManager');
         $this->articleCategoryService = $services->get('ApigilityBlog\Service\CategoryService');
+    }
+
+    /**
+     * 创建一个客户
+     *
+     * @param User $user
+     * @param DoctrineEntity\Individual $individual
+     * @return DoctrineEntity\Customer
+     */
+    public function createCustomer(User $user, DoctrineEntity\Individual $individual)
+    {
+        $customer = new DoctrineEntity\Customer();
+        $customer->setUser($user)
+            ->setIndividual($individual)
+            ->setCreateTime(new \DateTime());
+        $this->em->persist($customer);
+        $this->em->flush();
+
+        return $customer;
     }
 
     /**

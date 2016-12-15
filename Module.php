@@ -40,10 +40,13 @@ class Module implements ApigilityProviderInterface
             $services    = $application->getServiceManager();
 
             $application->getEventManager()->attach(MvcEvent::EVENT_ROUTE, function () use ($services){
-                $events = $services->get('ApigilityUser\Service\UserService')->getEventManager();
-
+                $userEvents = $services->get('ApigilityUser\Service\UserService')->getEventManager();
                 $individual_listener = new IndividualListener($services);
-                $individual_listener->attach($events);
+                $individual_listener->attach($userEvents);
+
+                $bookingEvents = $services->get('ApigilityO2oServiceTrade\Service\BookingService')->getEventManager();
+                $customer_listener = new CustomerListener($services);
+                $customer_listener->attach($bookingEvents);
             });
         }
     }

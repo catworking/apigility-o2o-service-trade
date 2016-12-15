@@ -7,6 +7,9 @@
  */
 namespace ApigilityO2oServiceTrade;
 
+use ApigilityO2oServiceTrade\DoctrineEntity\Individual;
+use ApigilityO2oServiceTrade\Service\BookingService;
+use ApigilityUser\DoctrineEntity\User;
 use ApigilityUser\Service\IdentityService;
 use ApigilityUser\Service\UserService;
 use Zend\EventManager\EventManagerInterface;
@@ -22,9 +25,9 @@ class CustomerListener implements ListenerAggregateInterface
     private $services;
 
     /**
-     * @var \ApigilityUser\Service\IdentityService
+     * @var \ApigilityO2oServiceTrade\Service\CustomerService
      */
-    private $identityService;
+    private $customerService;
 
     public function __construct(ServiceManager $services)
     {
@@ -33,21 +36,21 @@ class CustomerListener implements ListenerAggregateInterface
 
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach(UserService::EVENT_USER_CREATED, [$this, 'createCustomer'], $priority);
+        $this->listeners[] = $events->attach(BookingService::EVENT_BOOKING_CREATED, [$this, 'createCustomer'], $priority);
     }
 
     public function createCustomer(EventInterface $e)
     {
         $params = $e->getParams();
         $booking = $params['booking'];
-        $
+
+        $user = $booking->getUser();
+        $individual = $booking->getIndividual();
 
         // 创建客户记录
-        $this->identityService = $this->services->get('ApigilityUser\Service\IdentityService');
-        $identity = $this->identityService->getIdentity($params['user']->getId());
-        if ($identity->getType() == 'individual') {
-            $individualService = $this->services->get('ApigilityO2oServiceTrade\Service\IndividualService');
-            $individualService->createIndividual('{}',$params['user']);
+        if ($user instanceof User && $individual instanceof Individual) {
+            $this->customerService = $this->services->get('ApigilityO2oServiceTrade\Service\CustomerService');
+            $this->customerService->createCustomer($user, $individual);
         }
     }
 }
