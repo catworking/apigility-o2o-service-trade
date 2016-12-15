@@ -34,12 +34,8 @@ class BookingResource extends ApigilityResource
     public function create($data)
     {
         try {
-            $booking_data = '{}';
-            if (isset($data->booking_data)) $booking_data = $data->booking_data;
-
             $user = $this->userService->getAuthUser();
-
-            $booking = $this->bookingService->createBooking($user, $data->service_specification_id, $data->quantity, $booking_data);
+            $booking = $this->bookingService->createBooking($user, $data);
             return new BookingEntity($booking, $this->serviceManager);
         } catch (\Exception $exception) {
             return new ApiProblem($exception->getCode(), $exception->getMessage());

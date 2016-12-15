@@ -56,12 +56,28 @@ class Booking
     protected $order;
 
     /**
-     * 所属的服务
+     * 所购买服务的服务
      *
      * @ManyToOne(targetEntity="Service")
      * @JoinColumn(name="service_id", referencedColumnName="id")
      */
     protected $service;
+
+    /**
+     * 提供所购买服务的服务个体
+     *
+     * @ManyToOne(targetEntity="Individual")
+     * @JoinColumn(name="individual_id", referencedColumnName="id")
+     */
+    protected $individual;
+
+    /**
+     * 提供所购买服务的机构
+     *
+     * @ManyToOne(targetEntity="Organization")
+     * @JoinColumn(name="organization_id", referencedColumnName="id")
+     */
+    protected $organization;
 
     /**
      * 评价
@@ -137,5 +153,27 @@ class Booking
     public function getAppraisal()
     {
         return $this->appraisal;
+    }
+
+    public function setIndividual($individual)
+    {
+        $this->individual = $individual;
+        return $this;
+    }
+
+    public function getIndividual()
+    {
+        return $this->individual;
+    }
+
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getOrganization()
+    {
+        return $this->organization;
     }
 }

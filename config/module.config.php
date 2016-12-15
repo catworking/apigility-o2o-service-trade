@@ -743,6 +743,28 @@ return [
                 'description' => '预订所附加的数据，使用json格式，字段任意扩展',
                 'field_type' => 'string',
             ],
+            4 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'individual_id',
+                'description' => '提供所购买服务的服务个体',
+                'error_message' => '请输入提供所购买服务的服务个体',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'field_type' => 'int',
+            ],
+            5 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'organization_id',
+                'field_type' => 'int',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'description' => '提供所购买服务的服务机构',
+                'error_message' => '请输入提供所购买服务的服务个体',
+            ],
         ],
         'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Validator' => [
             0 => [

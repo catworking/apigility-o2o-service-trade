@@ -77,10 +77,18 @@ class Organization
      */
     protected $ownServices;
 
+    /**
+     * 收到的预订单
+     *
+     * @OneToMany(targetEntity="Booking", mappedBy="organization")
+     */
+    protected $bookings;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->ownServices = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public function setId($id)
@@ -147,6 +155,23 @@ class Organization
     public function addProvideService(Service $service)
     {
         $this->provideServices[] = $service;
+        return $this;
+    }
+
+    public function setBookings($bookings)
+    {
+        $this->bookings = $bookings;
+        return $this;
+    }
+
+    public function getBookings()
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking($booking)
+    {
+        $this->bookings[] = $booking;
         return $this;
     }
 }

@@ -101,12 +101,20 @@ class Individual
      */
     protected $customers;
 
+    /**
+     * 收到的预订单
+     *
+     * @OneToMany(targetEntity="Booking", mappedBy="organization")
+     */
+    protected $bookings;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->ownServices = new ArrayCollection();
         $this->appraisals = new ArrayCollection();
         $this->customers = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public function setId($id)
@@ -210,6 +218,23 @@ class Individual
     public function addCustomer($customer)
     {
         $this->customers[] = $customer;
+        return $this;
+    }
+
+    public function setBookings($bookings)
+    {
+        $this->bookings = $bookings;
+        return $this;
+    }
+
+    public function getBookings()
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking($booking)
+    {
+        $this->bookings[] = $booking;
         return $this;
     }
 }

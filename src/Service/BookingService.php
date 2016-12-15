@@ -7,6 +7,7 @@
  */
 namespace ApigilityO2oServiceTrade\Service;
 
+use ApigilityCatworkFoundation\Base\ApigilityEventAwareObject;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Doctrine\ORM\QueryBuilder;
@@ -16,8 +17,10 @@ use ApigilityO2oServiceTrade\DoctrineEntity;
 use ApigilityOrder\DoctrineEntity\Order;
 use ApigilityOrder\DoctrineEntity\OrderDetail;
 
-class BookingService
+class BookingService extends ApigilityEventAwareObject
 {
+    const EVENT_BOOKING_CREATED = 'BookingService.EVENT_BOOKING_CREATED';
+
     protected $classMethodsHydrator;
 
     /**
@@ -35,34 +38,71 @@ class BookingService
      */
     protected $serviceService;
 
+    /**
+     * @var \ApigilityO2oServiceTrade\Service\IndividualService
+     */
+    protected $individualService;
+
+    /**
+     * @var \ApigilityO2oServiceTrade\Service\OrganizationService
+     */
+    protected $organizationService;
+
     public function __construct(ServiceManager $services)
     {
         $this->classMethodsHydrator = new ClassMethodsHydrator();
         $this->em = $services->get('Doctrine\ORM\EntityManager');
         $this->orderService = $services->get('ApigilityOrder\Service\OrderService');
         $this->serviceService = $services->get('ApigilityO2oServiceTrade\Service\ServiceService');
+        $this->individualService = $services->get('ApigilityO2oServiceTrade\Service\IndividualService');
+        $this->organizationService = $services->get('ApigilityO2oServiceTrade\Service\OrganizationService');
     }
 
     /**
      * 创建一个预订单
      *
      * @param $user
-     * @param $service_specification_id
-     * @param $quantity
-     * @param $booking_data
+     * @param $data
      * @return DoctrineEntity\Booking
+     * @throws \Exception
+     * @internal param $service_specification_id
+     * @internal param $quantity
+     * @internal param $booking_data
      */
-    public function createBooking($user, $service_specification_id, $quantity, $booking_data)
+    public function createBooking($user, $data)
     {
-        $service_specification = $this->serviceService->getServiceSpecification($service_specification_id);
+        $booking_data = '{}';
+        if (isset($data->booking_data)) $booking_data = $data->booking_data;
+
+        $service_specification = $this->serviceService->getServiceSpecification($data->service_specification_id);
         $service = $service_specification->getService();
+
+        $individual = null;
+        $organization = null;
+        if ($service->getType() == $service::TYPE_NONSTANDARD) {
+            $individual = $service->getIndividual();
+            $organization = $service->getOrganization();
+            if (empty($individual) && empty($organization)) throw new \Exception('预订的个性化（非标准化）服务，没有指定服务个体或服务机构，请联系管理员处理', 500);
+        } else if ($service->getType() == $service::TYPE_STANDARD) {
+            if (!isset($data->individual_id) && !isset($data->organization_id)) {
+                // 暂时允许不指定
+                // throw new \Exception('预订标准化服务，需要指定服务个体或服务机构', 500);
+            } else {
+                if (isset($data->individual_id)) {
+                    $individual = $this->individualService->getIndividual($data->individual_id);
+                }
+                if (isset($data->organization_id)) {
+                    $organization = $this->organizationService->getOrganization($data->organization_id);
+                }
+            }
+        }
 
         $order = $this->orderService->createOrder($service->getTitle(), $user);
         $this->orderService->createOrderDetail(
             $order,
             $service_specification->getName(),
             $service_specification->getPrice(),
-            $quantity,
+            $data->quantity,
             $service->getId(),
             $service_specification->getId()
         );
@@ -73,8 +113,14 @@ class BookingService
         $booking->setService($service);
         $booking->setBookingData($booking_data);
 
+        if ($individual instanceof DoctrineEntity\Individual) $booking->setIndividual($individual);
+        if ($organization instanceof DoctrineEntity\Organization) $booking->setOrganization($organization);
+
         $this->em->persist($booking);
         $this->em->flush();
+
+        // 创建客户信息
+        $this->getEventManager()->trigger(self::EVENT_BOOKING_CREATED, $this, ['booking' => $booking]);
 
         return $booking;
     }
@@ -130,10 +176,9 @@ class BookingService
         }
 
         if (isset($params->individual_id)) {
-            $qb->innerJoin('b.service', 's');
-            $qb->innerJoin('s.individual', 'si');
+            $qb->innerJoin('b.individual', 'bi');
             if (!empty($where)) $where .= ' AND ';
-            $where .= '(si.id = :individual_id)';
+            $where .= '(bi.id = :individual_id)';
         }
 
         if (!empty($where)) {
@@ -143,8 +188,8 @@ class BookingService
                 foreach ($statuses as $k=>$status) {
                     $qb->setParameter('status'.$k, $status);
                 }
-
             }
+
             if (isset($params->user_id)) $qb->setParameter('user_id', $params->user_id);
             if (isset($params->individual_id)) {
                 $qb->setParameter('individual_id', $params->individual_id);
