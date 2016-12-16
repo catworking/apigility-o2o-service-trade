@@ -125,6 +125,9 @@ class Booking
         return $this;
     }
 
+    /**
+     * @return Order
+     */
     public function getOrder()
     {
         return $this->order;

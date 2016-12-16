@@ -222,4 +222,37 @@ class BookingService extends ApigilityEventAwareObject
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
         return new DoctrinePaginatorAdapter($doctrine_paginator);
     }
+
+    public function updateBooking($booking_id, $data, User $user)
+    {
+        $booking = $this->getBooking($booking_id);
+        $individual = $booking->getIndividual();
+        $booking_user = $booking->getUser();
+
+        $can_modify = false;
+        if ($booking_user instanceof User && $booking_user->getId() == $user->getId())  $can_modify = true;
+        if ($individual instanceof DoctrineEntity\Individual &&
+            $individual->getUser() instanceof User &&
+            $individual->getUser()->getId() == $user->getId())  $can_modify = true;
+
+        if (!$can_modify) throw new \Exception('没有权限修改预订单', 403);
+
+        $order = $booking->getOrder();
+        if (isset($data->order_status)) {
+            $order->setStatus($data->order_status);
+        }
+
+        $this->em->flush();
+
+        // 发送消费者通知
+        $notification_data = new \stdClass();
+        $notification_data->user_id = $booking_user->getId();
+        $notification_data->type = 'booking';
+        $notification_data->object_id = $booking->getId();
+        $notification_data->title = '订单已完成';
+        $notification_data->content = '你的订单「'.$order->getSeriesNumber().'」已完成。';
+        $this->notificationService->createNotification($notification_data);
+
+        return $booking;
+    }
 }

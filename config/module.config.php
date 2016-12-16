@@ -286,6 +286,7 @@ return [
             'collection_name' => 'booking',
             'entity_http_methods' => [
                 0 => 'GET',
+                1 => 'PATCH',
             ],
             'collection_http_methods' => [
                 0 => 'GET',
@@ -764,6 +765,16 @@ return [
                 'continue_if_empty' => true,
                 'description' => '提供所购买服务的服务机构',
                 'error_message' => '请输入提供所购买服务的服务个体',
+            ],
+            6 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'order_status',
+                'description' => '订单状态（patch专用字段）',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'error_message' => '请指定订单状态（patch专用字段）',
             ],
         ],
         'ApigilityO2oServiceTrade\\V1\\Rest\\Individual\\Validator' => [

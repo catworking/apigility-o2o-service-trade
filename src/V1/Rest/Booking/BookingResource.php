@@ -71,4 +71,14 @@ class BookingResource extends ApigilityResource
             return new ApiProblem($exception->getCode(), $exception->getMessage());
         }
     }
+
+    public function patch($id, $data)
+    {
+        try {
+            $auth_user = $this->userService->getAuthUser();
+            return new BookingEntity($this->bookingService->updateBooking($id, $data, $auth_user), $this->serviceManager);
+        } catch (\Exception $exception) {
+            return new ApiProblem($exception->getCode(), $exception->getMessage());
+        }
+    }
 }
