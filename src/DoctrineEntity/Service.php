@@ -194,6 +194,9 @@ class Service
         return $this;
     }
 
+    /**
+     * @return Individual
+     */
     public function getIndividual()
     {
         return $this->individual;

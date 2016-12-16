@@ -7,6 +7,7 @@
  */
 namespace ApigilityO2oServiceTrade\Service;
 
+use ApigilityCommunicate\DoctrineEntity\Notification;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Doctrine\ORM\QueryBuilder;
@@ -33,12 +34,18 @@ class AppraisalService
      */
     protected $articleService;
 
+    /**
+     * @var \ApigilityCommunicate\Service\NotificationService
+     */
+    protected $notificationService;
+
     public function __construct(ServiceManager $services)
     {
         $this->classMethodsHydrator = new ClassMethodsHydrator();
         $this->em = $services->get('Doctrine\ORM\EntityManager');
         $this->bookingService = $services->get('ApigilityO2oServiceTrade\Service\BookingService');
         $this->articleService = $services->get('ApigilityBlog\Service\ArticleService');
+        $this->notificationService = $services->get('ApigilityCommunicate\Service\NotificationService');
     }
 
     /**
@@ -129,6 +136,17 @@ class AppraisalService
 
         $this->em->persist($appraisal);
         $this->em->flush();
+
+        // 发送用户通知
+        if (!empty($individual)) {
+            $notification_data = new \stdClass();
+            $notification_data->user_id = $individual->getUser()->getId();
+            $notification_data->type = 'appraisal';
+            $notification_data->object_id = $appraisal->getId();
+            $notification_data->title = '收到新的评价';
+            $notification_data->content = '你的服务项目：「'.$service->getTitle().'」收到新的评价。';
+            $this->notificationService->createNotification($notification_data);
+        }
 
         return $appraisal;
     }

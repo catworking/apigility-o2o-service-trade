@@ -8,6 +8,7 @@
 namespace ApigilityO2oServiceTrade\Service;
 
 use ApigilityCatworkFoundation\Base\ApigilityEventAwareObject;
+use ApigilityUser\DoctrineEntity\User;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Doctrine\ORM\QueryBuilder;
@@ -48,6 +49,11 @@ class BookingService extends ApigilityEventAwareObject
      */
     protected $organizationService;
 
+    /**
+     * @var \ApigilityCommunicate\Service\NotificationService
+     */
+    protected $notificationService;
+
     public function __construct(ServiceManager $services)
     {
         $this->classMethodsHydrator = new ClassMethodsHydrator();
@@ -56,6 +62,7 @@ class BookingService extends ApigilityEventAwareObject
         $this->serviceService = $services->get('ApigilityO2oServiceTrade\Service\ServiceService');
         $this->individualService = $services->get('ApigilityO2oServiceTrade\Service\IndividualService');
         $this->organizationService = $services->get('ApigilityO2oServiceTrade\Service\OrganizationService');
+        $this->notificationService = $services->get('ApigilityCommunicate\Service\NotificationService');
     }
 
     /**
@@ -69,7 +76,7 @@ class BookingService extends ApigilityEventAwareObject
      * @internal param $quantity
      * @internal param $booking_data
      */
-    public function createBooking($user, $data)
+    public function createBooking(User $user, $data)
     {
         $booking_data = '{}';
         if (isset($data->booking_data)) $booking_data = $data->booking_data;
@@ -121,6 +128,22 @@ class BookingService extends ApigilityEventAwareObject
 
         // 创建客户信息
         $this->getEventManager()->trigger(self::EVENT_BOOKING_CREATED, $this, ['booking' => $booking]);
+
+        // 发送消费者通知
+        $notification_data = new \stdClass();
+        $notification_data->user_id = $user->getId();
+        $notification_data->type = 'booking';
+        $notification_data->object_id = $booking->getId();
+        $notification_data->title = '订单进行中';
+        $notification_data->content = '你的订单「'.$order->getSeriesNumber().'」正在进行中。';
+        $this->notificationService->createNotification($notification_data);
+
+        // 发送服务者通知
+        if ($individual instanceof DoctrineEntity\Individual) {
+            $notification_data->user_id = $individual->getUser()->getId();
+            $notification_data->content = '你的订单「'.$order->getSeriesNumber().'」正在进行中，完成服务后进入订单详情点击“确认完成服务”即可完成订单。';
+            $this->notificationService->createNotification($notification_data);
+        }
 
         return $booking;
     }
