@@ -3,7 +3,11 @@ namespace ApigilityO2oServiceTrade\V1\Rest\Booking;
 
 use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 use ApigilityO2oServiceTrade\DoctrineEntity\Appraisal;
+use ApigilityO2oServiceTrade\DoctrineEntity\Individual;
+use ApigilityO2oServiceTrade\DoctrineEntity\Organization;
 use ApigilityO2oServiceTrade\V1\Rest\Appraisal\AppraisalEntity;
+use ApigilityO2oServiceTrade\V1\Rest\Individual\IndividualEntity;
+use ApigilityO2oServiceTrade\V1\Rest\Organization\OrganizationEntity;
 use ApigilityO2oServiceTrade\V1\Rest\Service\ServiceEntity;
 use ApigilityOrder\V1\Rest\Order\OrderEntity;
 use ApigilityUser\V1\Rest\User\UserEntity;
@@ -46,6 +50,22 @@ class BookingEntity extends ApigilityObjectStorageAwareEntity
      * @JoinColumn(name="service_id", referencedColumnName="id")
      */
     protected $service;
+
+    /**
+     * 提供所购买服务的服务个体
+     *
+     * @ManyToOne(targetEntity="Individual")
+     * @JoinColumn(name="individual_id", referencedColumnName="id")
+     */
+    protected $individual;
+
+    /**
+     * 提供所购买服务的机构
+     *
+     * @ManyToOne(targetEntity="Organization")
+     * @JoinColumn(name="organization_id", referencedColumnName="id")
+     */
+    protected $organization;
 
     /**
      * 评价
@@ -119,5 +139,28 @@ class BookingEntity extends ApigilityObjectStorageAwareEntity
     public function getAppraisal()
     {
         return (boolean)$this->appraisal;
+    }
+    public function setIndividual($individual)
+    {
+        $this->individual = $individual;
+        return $this;
+    }
+
+    public function getIndividual()
+    {
+        if ($this->individual instanceof Individual) return $this->hydrator->extract(new IndividualEntity($this->individual, $this->serviceManager));
+        else return $this->individual;
+    }
+
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
+    public function getOrganization()
+    {
+        if ($this->organization instanceof Organization) return $this->hydrator->extract(new OrganizationEntity($this->organization, $this->serviceManager));
+        else return $this->organization;
     }
 }
