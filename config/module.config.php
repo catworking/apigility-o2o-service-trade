@@ -807,6 +807,17 @@ return [
                 'field_type' => 'int',
                 'error_message' => '请输入机构',
             ],
+            3 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'description',
+                'description' => '个体简介',
+                'field_type' => 'string',
+                'allow_empty' => true,
+                'continue_if_empty' => true,
+                'error_message' => '请输入个体简介',
+            ],
         ],
         'ApigilityO2oServiceTrade\\V1\\Rest\\Customer\\Validator' => [
             0 => [
