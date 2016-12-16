@@ -176,9 +176,18 @@ class BookingService extends ApigilityEventAwareObject
         $qb->select('b')->from('ApigilityO2oServiceTrade\DoctrineEntity\Booking', 'b');
 
         $where = null;
+
+        if (isset($params->order_id) || isset($params->status)) {
+            $qb->innerJoin('b.order', 'bo');
+        }
+
+        if (isset($params->order_id)) {
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'bo.id = :order_id';
+        }
+
         if (isset($params->status)) {
 
-            $qb->innerJoin('b.order', 'bo');
             if (!empty($where)) $where .= ' AND ';
 
             // 处理多个状态
@@ -206,6 +215,11 @@ class BookingService extends ApigilityEventAwareObject
 
         if (!empty($where)) {
             $qb->where($where);
+
+            if (isset($params->order_id)) {
+                $qb->setParameter('order_id', $params->order_id);
+            }
+
             if (isset($params->status)) {
                 $statuses = explode(',', $params->status);
                 foreach ($statuses as $k=>$status) {

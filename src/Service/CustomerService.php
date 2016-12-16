@@ -87,12 +87,19 @@ class CustomerService
         if (isset($params->individual_id)) {
             $qb->innerJoin('c.individual', 'i');
             if (!empty($where)) $where .= ' AND ';
-            $where = 'i.id = :individual_id';
+            $where .= 'i.id = :individual_id';
+        }
+
+        if (isset($params->user_id)) {
+            $qb->innerJoin('c.user', 'u');
+            if (!empty($where)) $where .= ' AND ';
+            $where .= 'u.id = :user_id';
         }
 
         if (!empty($where)) {
             $qb->where($where);
             if (isset($params->individual_id)) $qb->setParameter('individual_id', $params->individual_id);
+            if (isset($params->user_id)) $qb->setParameter('user_id', $params->user_id);
         }
 
         $doctrine_paginator = new DoctrineToolPaginator($qb->getQuery());
@@ -110,5 +117,16 @@ class CustomerService
         } else {
             throw new \Exception('没有权限修改客户数据', 403);
         }
+    }
+
+    public function existCustomer(User $user, DoctrineEntity\Individual $individual)
+    {
+        $params = new \stdClass();
+        $params->user_id = $user->getId();
+        $params->individual_id = $individual->getId();
+        $rs = $this->getCustomers($params);
+
+        if ($rs->count() > 0) return true;
+        else return false;
     }
 }

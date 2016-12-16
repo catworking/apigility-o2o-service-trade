@@ -47,6 +47,10 @@ class Module implements ApigilityProviderInterface
                 $bookingEvents = $services->get('ApigilityO2oServiceTrade\Service\BookingService')->getEventManager();
                 $customer_listener = new CustomerListener($services);
                 $customer_listener->attach($bookingEvents);
+
+                $paymentEvents = $services->get('ApigilityOrder\Service\PaymentService')->getEventManager();
+                $booking_listener = new BookingListener($services);
+                $booking_listener->attach($paymentEvents);
             });
         }
     }

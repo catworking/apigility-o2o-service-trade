@@ -50,7 +50,10 @@ class CustomerListener implements ListenerAggregateInterface
         // 创建客户记录
         if ($user instanceof User && $individual instanceof Individual) {
             $this->customerService = $this->services->get('ApigilityO2oServiceTrade\Service\CustomerService');
-            $this->customerService->createCustomer($user, $individual);
+
+            if (!$this->customerService->existCustomer($user, $individual)) {
+                $this->customerService->createCustomer($user, $individual);
+            }
         }
     }
 }
