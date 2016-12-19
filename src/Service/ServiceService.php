@@ -57,6 +57,20 @@ class ServiceService
             $where = 's.type = :type';
         }
 
+        if (isset($params->owner_type)) {
+            if (!empty($where)) $where .= ' AND ';
+            switch ($params->owner_type) {
+                case 'organization':
+                    $where .= 's.organization IS NOT NULL';
+                    break;
+                case 'individual':
+                    $where .= 's.individual IS NOT NULL';
+                    break;
+                default:
+                    throw new \Exception('未知的owner_type', 500);
+            }
+        }
+
         if (isset($params->service_category_id)) {
             $qb->innerJoin('s.categories', 'sc');
             if (!empty($where)) $where .= ' AND ';
@@ -91,6 +105,8 @@ class ServiceService
             if (!empty($where)) $where .= ' AND ';
             $where .= 'spi.id = :provider_individual_id';
         }
+
+
 
         if (!empty($where)) {
             $qb->where($where);

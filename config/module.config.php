@@ -152,6 +152,7 @@ return [
                 3 => 'provider_organization_id',
                 4 => 'owner_individual_id',
                 5 => 'provider_individual_id',
+                6 => 'owner_type',
             ],
             'page_size' => 25,
             'page_size_param' => null,
