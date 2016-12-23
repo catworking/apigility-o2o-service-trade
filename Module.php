@@ -35,23 +35,19 @@ class Module implements ApigilityProviderInterface
 
     public function onBootstrap(MvcEvent $e)
     {
-        if ($e->getName() == MvcEvent::EVENT_BOOTSTRAP) {
-            $application = $e->getApplication();
-            $services    = $application->getServiceManager();
+        $application = $e->getApplication();
+        $services    = $application->getServiceManager();
 
-            $application->getEventManager()->attach(MvcEvent::EVENT_ROUTE, function () use ($services){
-                $userEvents = $services->get('ApigilityUser\Service\UserService')->getEventManager();
-                $individual_listener = new IndividualListener($services);
-                $individual_listener->attach($userEvents);
+        $userEvents = $services->get('ApigilityUser\Service\UserService')->getEventManager();
+        $individual_listener = new IndividualListener($services);
+        $individual_listener->attach($userEvents);
 
-                $bookingEvents = $services->get('ApigilityO2oServiceTrade\Service\BookingService')->getEventManager();
-                $customer_listener = new CustomerListener($services);
-                $customer_listener->attach($bookingEvents);
+        $bookingEvents = $services->get('ApigilityO2oServiceTrade\Service\BookingService')->getEventManager();
+        $customer_listener = new CustomerListener($services);
+        $customer_listener->attach($bookingEvents);
 
-                $paymentEvents = $services->get('ApigilityOrder\Service\PaymentService')->getEventManager();
-                $booking_listener = new BookingListener($services);
-                $booking_listener->attach($paymentEvents);
-            });
-        }
+        $paymentEvents = $services->get('ApigilityOrder\Service\PaymentService')->getEventManager();
+        $booking_listener = new BookingListener($services);
+        $booking_listener->attach($paymentEvents);
     }
 }
