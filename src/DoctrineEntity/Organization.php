@@ -84,6 +84,14 @@ class Organization
      */
     protected $bookings;
 
+    /**
+     * 机构地址
+     *
+     * @ManyToOne(targetEntity="ApigilityAddress\DoctrineEntity\Address")
+     * @JoinColumn(name="address_id", referencedColumnName="id")
+     */
+    protected $address;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -173,5 +181,16 @@ class Organization
     {
         $this->bookings[] = $booking;
         return $this;
+    }
+
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    public function getAddress()
+    {
+        return $this->address;
     }
 }

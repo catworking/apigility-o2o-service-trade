@@ -1,6 +1,8 @@
 <?php
 namespace ApigilityO2oServiceTrade\V1\Rest\Organization;
 
+use ApigilityAddress\DoctrineEntity\Address;
+use ApigilityAddress\V1\Rest\Address\AddressEntity;
 use ApigilityCatworkFoundation\Base\ApigilityObjectStorageAwareEntity;
 
 class OrganizationEntity extends ApigilityObjectStorageAwareEntity
@@ -31,6 +33,14 @@ class OrganizationEntity extends ApigilityObjectStorageAwareEntity
      * @Column(type="string", length=255, nullable=true)
      */
     protected $image;
+
+    /**
+     * 机构地址
+     *
+     * @ManyToOne(targetEntity="ApigilityAddress\Doctrine\Address")
+     * @JoinColumn(name="address_id", referencedColumnName="id")
+     */
+    protected $address;
 
     public function setId($id)
     {
@@ -74,5 +84,17 @@ class OrganizationEntity extends ApigilityObjectStorageAwareEntity
     public function getImage()
     {
         return $this->renderUriToUrl($this->image);
+    }
+
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    public function getAddress()
+    {
+        if ($this->address instanceof Address) return $this->hydrator->extract(new AddressEntity($this->address));
+        else return $this->address;
     }
 }
